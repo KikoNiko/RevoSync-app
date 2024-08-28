@@ -1,0 +1,16 @@
+INSERT INTO categories (category_id, name, parent_category_id) VALUES
+(17, 'ELECTRICITY', 2),
+(18, 'WATER', 2),
+(19, 'PHONE', 2),
+(20, 'INTERNET', 2),
+(21, 'GROCERIES', 3),
+(22, 'RESTAURANTS', 3),
+(23, 'FAST_FOOD', 3),
+(24, 'CAR', 4),
+(25, 'TRAINS', 4),
+(26, 'BUSSES', 4),
+(27, 'FLIGHTS', 4),
+(28, 'MEDICAL', 7),
+(29, 'COSMETICS', 7),
+(30, 'SPORTS', 7),
+(31, 'CREDIT', 9);
