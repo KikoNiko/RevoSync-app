@@ -31,6 +31,7 @@ public class ExpenseService {
         Expense toSave = Expense.builder()
                 .amount(expenseRequest.getAmount())
                 .category(category)
+                .date(expenseRequest.getDate())
                 .comment(expenseRequest.getComment())
                 .build();
 
@@ -40,6 +41,7 @@ public class ExpenseService {
                 .id(toSave.getId())
                 .amount(toSave.getAmount())
                 .category(expenseRequest.getCategory())
+                .date(toSave.getDate())
                 .comment(toSave.getComment())
                 .build();
     }
@@ -68,6 +70,7 @@ public class ExpenseService {
                 .id(exp.getId())
                 .amount(exp.getAmount())
                 .category(exp.getCategory().getName().toString())
+                .date(exp.getDate())
                 .comment(exp.getComment())
                 .build();
     }

@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -26,7 +27,7 @@ public class Expense {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
+    private LocalDate date;
     private String comment;
 
 }
