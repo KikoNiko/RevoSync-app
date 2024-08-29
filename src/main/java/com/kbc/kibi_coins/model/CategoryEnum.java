@@ -16,5 +16,21 @@ public enum CategoryEnum {
     DONATIONS,
     SAVINGS,
     INVESTMENTS,
-    OTHERS
+    OTHERS,
+    ELECTRICITY,
+    WATER,
+    PHONE,
+    INTERNET,
+    GROCERIES,
+    RESTAURANTS,
+    FAST_FOOD,
+    CAR,
+    TRAINS,
+    BUSSES,
+    FLIGHTS,
+    MEDICAL,
+    COSMETICS,
+    SPORTS,
+    CREDIT
+
 }

@@ -1,7 +1,6 @@
 package com.kbc.kibi_coins.model;
 
 import jakarta.persistence.*;
-import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;

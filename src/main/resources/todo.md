@@ -1,7 +1,7 @@
 ### To do list for KibiCoins app:
-- [ ] Create the postgresql db
+- [X] Create the postgresql db
 - [ ] Build the db model
-- [ ] Initialize categories
+- [X] Initialize categories
 - [ ] Work on rest api
 
 
