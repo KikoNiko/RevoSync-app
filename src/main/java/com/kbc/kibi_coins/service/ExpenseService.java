@@ -7,13 +7,18 @@ import com.kbc.kibi_coins.model.dto.ExpenseRequest;
 import com.kbc.kibi_coins.model.dto.ExpenseResponse;
 import com.kbc.kibi_coins.repository.CategoryRepository;
 import com.kbc.kibi_coins.repository.ExpenseRepository;
+import com.kbc.kibi_coins.util.ConstantMessages;
+import com.kbc.kibi_coins.util.InvalidCategoryException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.kbc.kibi_coins.util.ConstantMessages.INVALID_CATEGORY;
 
 @Service
 @RequiredArgsConstructor
@@ -24,9 +29,15 @@ public class ExpenseService {
     private final CategoryRepository categoryRepository;
 
     public ExpenseResponse addExpense(ExpenseRequest expenseRequest) {
+        if (!Arrays.stream(CategoryEnum.values())
+                .map(Enum::toString)
+                .toList()
+                .contains(expenseRequest.getCategory())) {
+            throw new InvalidCategoryException(String.format(INVALID_CATEGORY, expenseRequest.getCategory()));
+        }
+
         Category category = categoryRepository
-                .findByName(CategoryEnum.valueOf(expenseRequest.getCategory()))
-                .orElseThrow(IllegalArgumentException::new);
+                .findByName(CategoryEnum.valueOf(expenseRequest.getCategory()));
 
         Expense toSave = Expense.builder()
                 .amount(expenseRequest.getAmount())

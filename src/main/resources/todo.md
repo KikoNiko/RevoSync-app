@@ -3,6 +3,8 @@
 - [ ] Build the db model
 - [X] Initialize categories
 - [ ] Work on rest api
+- [ ] Do paging
+- [ ] build app as SPA?
 
 
 
