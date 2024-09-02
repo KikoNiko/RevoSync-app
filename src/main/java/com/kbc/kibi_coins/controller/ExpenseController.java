@@ -1,5 +1,6 @@
 package com.kbc.kibi_coins.controller;
 
+import com.kbc.kibi_coins.model.Expense;
 import com.kbc.kibi_coins.model.dto.ExpenseRequest;
 import com.kbc.kibi_coins.model.dto.ExpenseResponse;
 import com.kbc.kibi_coins.service.ExpenseService;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 
 @RestController
@@ -39,5 +42,16 @@ public class ExpenseController {
     public ResponseEntity<String> deleteExpense(@PathVariable Long id) {
         expenseService.deleteExpenseById(id);
         return ResponseEntity.ok(String.format(ConstantMessages.EXPENSE_DELETED, id));
+    }
+
+    @PatchMapping("/{id}")
+    public ExpenseResponse updateExpense(@PathVariable Long id,
+                                         @RequestBody Expense incompleteExpense) {
+        return expenseService.updateExpenseByFields(id, incompleteExpense);
+    }
+
+    @GetMapping()
+    public List<ExpenseResponse> getAllByCategory(@RequestParam(value = "cat") String category) {
+        return expenseService.getAllByCategory(category);
     }
 }

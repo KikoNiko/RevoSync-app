@@ -7,15 +7,13 @@ import com.kbc.kibi_coins.model.dto.ExpenseRequest;
 import com.kbc.kibi_coins.model.dto.ExpenseResponse;
 import com.kbc.kibi_coins.repository.CategoryRepository;
 import com.kbc.kibi_coins.repository.ExpenseRepository;
-import com.kbc.kibi_coins.util.ConstantMessages;
 import com.kbc.kibi_coins.util.InvalidCategoryException;
+import com.kbc.kibi_coins.util.Patcher;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.kbc.kibi_coins.util.ConstantMessages.INVALID_CATEGORY;
@@ -29,15 +27,12 @@ public class ExpenseService {
     private final CategoryRepository categoryRepository;
 
     public ExpenseResponse addExpense(ExpenseRequest expenseRequest) {
-        if (!Arrays.stream(CategoryEnum.values())
-                .map(Enum::toString)
-                .toList()
-                .contains(expenseRequest.getCategory())) {
+        if (isCategoryInvalid(expenseRequest.getCategory())) {
             throw new InvalidCategoryException(String.format(INVALID_CATEGORY, expenseRequest.getCategory()));
         }
 
         Category category = categoryRepository
-                .findByName(CategoryEnum.valueOf(expenseRequest.getCategory()));
+                .findByName(CategoryEnum.valueOf(expenseRequest.getCategory().toUpperCase()));
 
         Expense toSave = Expense.builder()
                 .amount(expenseRequest.getAmount())
@@ -65,6 +60,7 @@ public class ExpenseService {
     public List<ExpenseResponse> getAllExpenses() {
         return expenseRepository.findAll()
                 .stream()
+                .sorted(Comparator.comparing(Expense::getDate).reversed())
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
@@ -86,4 +82,36 @@ public class ExpenseService {
                 .build();
     }
 
+    public List<ExpenseResponse> getAllByCategory(String category) {
+        if (isCategoryInvalid(category)) {
+            throw new InvalidCategoryException(String.format(INVALID_CATEGORY, category));
+        }
+        return expenseRepository.getAllByCategory_NameOrderByDateDesc(CategoryEnum.valueOf(category.toUpperCase()))
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    boolean isCategoryInvalid(String categoryName) {
+        return !Arrays.stream(CategoryEnum.values())
+                .map(Enum::toString)
+                .toList()
+                .contains(categoryName.toUpperCase());
+    }
+
+    public ExpenseResponse updateExpenseByFields(Long id, Expense incompleteExpense) {
+        Optional<Expense> byId = expenseRepository.findById(id);
+        if (byId.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+        Expense exp = byId.get();
+        try {
+            Patcher.expensePatcher(exp, incompleteExpense);
+            expenseRepository.save(exp);
+            log.info("Expense data updated");
+        }catch (Exception e){
+            log.error("Oops! Something went wrong...", e);
+        }
+        return mapToResponse(exp);
+    }
 }
