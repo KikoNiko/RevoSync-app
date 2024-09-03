@@ -2,6 +2,8 @@ package com.kbc.kibi_coins.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,7 @@ public class Expense {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+    @PastOrPresent
     private LocalDate date;
     private String comment;
 

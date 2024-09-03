@@ -1,6 +1,7 @@
 package com.kbc.kibi_coins.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,6 +14,7 @@ public class Category {
     @Column(name = "category_id")
     private Long categoryId;
     @Enumerated(EnumType.STRING)
+    @NotBlank
     private CategoryEnum name;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_category_id")
