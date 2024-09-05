@@ -41,8 +41,11 @@ public class ExpenseService {
                 .comment(expenseRequest.getComment())
                 .build();
 
+        category.getExpenses().add(toSave);
+
         expenseRepository.save(toSave);
         log.info("New Expense Saved!");
+
         return ExpenseResponse.builder()
                 .id(toSave.getId())
                 .amount(toSave.getAmount())
@@ -86,13 +89,15 @@ public class ExpenseService {
         if (isCategoryInvalid(category)) {
             throw new InvalidCategoryException(String.format(INVALID_CATEGORY, category));
         }
-        return expenseRepository.getAllByCategory_NameOrderByDateDesc(CategoryEnum.valueOf(category.toUpperCase()))
+        return categoryRepository.findByName(CategoryEnum.valueOf(category.toUpperCase()))
+                .getExpenses()
                 .stream()
                 .map(this::mapToResponse)
+                .sorted(Comparator.comparing(ExpenseResponse::getDate).reversed())
                 .collect(Collectors.toList());
     }
 
-    boolean isCategoryInvalid(String categoryName) {
+    static boolean isCategoryInvalid(String categoryName) {
         return !Arrays.stream(CategoryEnum.values())
                 .map(Enum::toString)
                 .toList()

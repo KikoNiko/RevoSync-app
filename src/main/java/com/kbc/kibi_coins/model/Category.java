@@ -2,12 +2,18 @@ package com.kbc.kibi_coins.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "categories")
+@Getter
+@Setter
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +27,8 @@ public class Category {
     private Category parentCategory;
     @OneToMany(mappedBy = "parentCategory")
     private Set<Category> subCategories = new HashSet<>();
+    @OneToMany(mappedBy = "category")
+    private List<Expense> expenses = new ArrayList<>();
 
     public Category() {
     }
@@ -43,35 +51,4 @@ public class Category {
         newParent.getSubCategories().add(this);
     }
 
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public CategoryEnum getName() {
-        return name;
-    }
-
-    public void setName(CategoryEnum name) {
-        this.name = name;
-    }
-
-    public Category getParentCategory() {
-        return parentCategory;
-    }
-
-    public void setParentCategory(Category parentCategory) {
-        this.parentCategory = parentCategory;
-    }
-
-    public Set<Category> getSubCategories() {
-        return subCategories;
-    }
-
-    public void setSubCategories(Set<Category> subCategories) {
-        this.subCategories = subCategories;
-    }
 }
