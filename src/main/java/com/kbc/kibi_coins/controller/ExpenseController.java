@@ -5,6 +5,7 @@ import com.kbc.kibi_coins.model.dto.ExpenseRequest;
 import com.kbc.kibi_coins.model.dto.ExpenseResponse;
 import com.kbc.kibi_coins.service.ExpenseService;
 import com.kbc.kibi_coins.util.ConstantMessages;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class ExpenseController {
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public ExpenseResponse addExpense(@RequestBody ExpenseRequest expenseRequest) {
+    public ExpenseResponse addExpense(@Valid @RequestBody ExpenseRequest expenseRequest) {
         return expenseService.addExpense(expenseRequest);
     }
 
@@ -43,12 +44,17 @@ public class ExpenseController {
 
     @PatchMapping("/{id}")
     public ExpenseResponse updateExpense(@PathVariable Long id,
-                                         @RequestBody Expense incompleteExpense) {
+                                         @Valid @RequestBody Expense incompleteExpense) {
         return expenseService.updateExpenseByFields(id, incompleteExpense);
     }
 
     @GetMapping()
     public List<ExpenseResponse> getAllByCategory(@RequestParam(value = "cat") String category) {
         return expenseService.getAllByCategory(category);
+    }
+
+    @GetMapping("/{year}/{month}")
+    public List<ExpenseResponse> getAllByYearAndMonth(@PathVariable int year, @PathVariable short month) {
+        return expenseService.getAllByYearAndMonth(year, month);
     }
 }

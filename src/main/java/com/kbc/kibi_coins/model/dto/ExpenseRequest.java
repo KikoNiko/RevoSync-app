@@ -15,12 +15,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class ExpenseRequest {
-    @Positive
-    @NotNull
+    @Positive(message = "Amount must be a positive number!")
+    @NotNull(message = "Amount cannot be empty!")
     private BigDecimal amount;
-    @NotBlank
+    @NotBlank(message = "Category cannot be empty!")
     private String category;
-    @PastOrPresent
+    @PastOrPresent(message = "Date cannot be in the future!")
     private LocalDate date;
     private String comment;
 }

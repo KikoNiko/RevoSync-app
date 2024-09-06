@@ -5,9 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -27,8 +25,6 @@ public class Category {
     private Category parentCategory;
     @OneToMany(mappedBy = "parentCategory")
     private Set<Category> subCategories = new HashSet<>();
-    @OneToMany(mappedBy = "category")
-    private List<Expense> expenses = new ArrayList<>();
 
     public Category() {
     }

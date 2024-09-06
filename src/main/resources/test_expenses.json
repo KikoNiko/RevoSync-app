@@ -1,0 +1,44 @@
+[
+  {
+    "amount" : 650,
+    "category" : "rent",
+    "date" : "2024-08-01",
+    "comment" : "Rent for august"
+  },
+  {
+    "amount" : 541,
+    "category" : "rent",
+    "date" : "2024-08-01",
+    "comment" : "Rent for september"
+  },
+  {
+    "amount" : 11.19,
+    "category" : "groceries",
+    "date" : "2024-08-07",
+    "comment" : "DM"
+  },
+  {
+    "amount" : 18.17,
+    "category" : "HOUSEHOLD_SUPPLIES",
+    "date" : "2024-08-10",
+    "comment" : "Something from IKEA"
+  },
+  {
+    "amount" : 43.80,
+    "category" : "HOUSEHOLD_SUPPLIES",
+    "date" : "2024-08-10",
+    "comment" : "PEPCO"
+  },
+  {
+    "amount" : 18.67,
+    "category" : "HOUSEHOLD_SUPPLIES",
+    "date" : "2024-08-10",
+    "comment" : "DM"
+  },
+  {
+    "amount" : 5.92,
+    "category" : "GROCERIES",
+    "date" : "2024-08-10",
+    "comment" : "LIDL"
+  }
+]
