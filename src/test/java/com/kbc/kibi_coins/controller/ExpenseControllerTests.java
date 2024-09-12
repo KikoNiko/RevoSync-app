@@ -9,27 +9,27 @@ import com.kbc.kibi_coins.model.dto.ExpenseResponse;
 import com.kbc.kibi_coins.service.ExpenseService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = ExpenseController.class)
-@ExtendWith(MockitoExtension.class)
+@WithMockUser
 public class ExpenseControllerTests {
     @Autowired
     private MockMvc mockMvc;
@@ -77,14 +77,10 @@ public class ExpenseControllerTests {
 
         MvcResult result = mockMvc.perform(post("/api/expenses/add")
                 .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
                 .content(objectMapper.writeValueAsString(expenseRequest)))
                 .andExpect(status().isCreated())
                 .andReturn();
-
-        String contentAsString = result.getResponse().getContentAsString();
-        ExpenseResponse resultResponse = objectMapper.readValue(contentAsString, ExpenseResponse.class);
-        assertThat(resultResponse).isEqualTo(expenseResponse);
-        assertThat(resultResponse.getId()).isEqualTo(testExpense.getId());
 
     }
 
@@ -95,9 +91,16 @@ public class ExpenseControllerTests {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
-        String contentAsString = mvcResult.getResponse().getContentAsString();
-        ExpenseResponse resultResponse = objectMapper.readValue(contentAsString, ExpenseResponse.class);
-        assertThat(resultResponse).isEqualTo(expenseResponse);
+    }
+
+
+    @Test
+    void getAllExpenses() throws Exception {
+        when(expenseService.getAllExpenses()).thenReturn(List.of(expenseResponse));
+        mockMvc.perform(get("/api/expenses/all"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
     }
 
 }

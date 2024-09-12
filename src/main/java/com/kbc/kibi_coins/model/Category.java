@@ -2,6 +2,7 @@ package com.kbc.kibi_coins.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +19,7 @@ public class Category {
     @Column(name = "category_id")
     private Long categoryId;
     @Enumerated(EnumType.STRING)
-    @NotBlank
+    @NotNull
     private CategoryEnum name;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_category_id")
