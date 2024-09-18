@@ -1,62 +1,106 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const apiUrl = 'http://localhost:8080/api/expenses'; // Adjust as needed
-    const form = document.getElementById('expense-form');
-    const expenseList = document.getElementById('expense-list');
-    const totalAmountElem = document.getElementById('total-amount');
+const apiUrl = 'http://localhost:8080/api/expenses'; // Update with your backend URL
 
-    // Function to fetch and display expenses
-    async function fetchExpenses() {
-        try {
-            const response = await fetch(apiUrl);
-            const expenses = await response.json();
-            updateExpenseList(expenses);
-            updateTotalAmount(expenses);
-        } catch (error) {
-            console.error('Error fetching expenses:', error);
+document.getElementById('expenseForm').addEventListener('submit', addExpense);
+document.getElementById('fetchExpensesBtn').addEventListener('click', fetchExpenses);
+
+async function fetchExpenses() {
+    try {
+        const response = await fetch(apiUrl + '/all');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
-    }
 
-    // Function to update expense list in the DOM
-    function updateExpenseList(expenses) {
-        expenseList.innerHTML = '';
+        const expenses = await response.json();
+        const tbody = document.querySelector('#expenseTable tbody');
+        tbody.innerHTML = '';
+
         expenses.forEach(expense => {
-            const li = document.createElement('li');
-            li.textContent = `${expense.description} - $${expense.amount.toFixed(2)} (${new Date(expense.date).toLocaleDateString()})`;
-            expenseList.appendChild(li);
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${expense.amount}</td>
+                <td>${expense.category}</td>
+                <td>${expense.date}</td>
+                <td>${expense.comment}</td>
+                <td>
+                    <button onclick="editExpense(${expense.id})">Edit</button>
+                    <button onclick="deleteExpense(${expense.id})">Delete</button>
+                </td>
+            `;
+            tbody.appendChild(row);
         });
+    } catch (error) {
+        console.error('Error fetching expenses:', error);
+        alert('Failed to fetch expenses. Check the console for more details.');
     }
+}
 
-    // Function to update total amount in the DOM
-    function updateTotalAmount(expenses) {
-        const totalAmount = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-        totalAmountElem.textContent = `$${totalAmount.toFixed(2)}`;
-    }
+async function addExpense(event) {
+    event.preventDefault();
+    const expense = {
+        amount: parseFloat(document.getElementById('amount').value),
+        category: document.getElementById('category').value,
+        date: document.getElementById('date').value,
+        comment: document.getElementById('comment').value
+    };
 
-    // Handle form submission
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const description = document.getElementById('description').value;
-        const amount = parseFloat(document.getElementById('amount').value);
-        const date = document.getElementById('date').value;
-
-        if (description && !isNaN(amount) && date) {
-            try {
-                await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ description, amount, date }),
-                });
-                fetchExpenses();
-                form.reset();
-            } catch (error) {
-                console.error('Error adding expense:', error);
-            }
-        }
+    await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(expense)
     });
 
-    // Initial fetch of expenses
-    fetchExpenses();
-});
+    document.getElementById('expenseForm').reset();
+    fetchExpenses(); // Refresh the expense list after adding
+}
+
+async function deleteExpense(id) {
+    const confirmDelete = confirm("Are you sure you want to delete this expense?");
+    if (!confirmDelete) {
+        return; // Exit the function if the user cancels
+    }
+    
+    try {
+        const response = await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+        fetchExpenses();
+    } catch (error) {
+        console.error('Error deleting expense:', error);
+        alert('Failed to delete expense. Check the console for more details.');
+    }
+}
+
+async function editExpense(id) {
+    const expense = await fetch(`${apiUrl}/${id}`).then(res => res.json());
+    document.getElementById('amount').value = expense.amount;
+    document.getElementById('category').value = expense.category;
+    document.getElementById('date').value = expense.date;
+    document.getElementById('comment').value = expense.comment;
+
+    // Update form submission to edit expense
+    document.getElementById('expenseForm').onsubmit = async function(event) {
+        event.preventDefault();
+        const updatedExpense = {
+            ...expense,
+            amount: parseFloat(document.getElementById('amount').value),
+            category: document.getElementById('category').value,
+            date: document.getElementById('date').value,
+            comment: document.getElementById('comment').value
+        };
+
+        await fetch(`${apiUrl}/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedExpense)
+        });
+
+        document.getElementById('expenseForm').reset();
+        document.getElementById('expenseForm').onsubmit = addExpense;
+        fetchExpenses();
+    };
+}

@@ -20,20 +20,20 @@ public class ExpenseController {
 
     private final ExpenseService expenseService;
 
-    @PostMapping("/add")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ExpenseResponse addExpense(@Valid @RequestBody ExpenseRequest expenseRequest) {
         return expenseService.addExpense(expenseRequest);
     }
 
-    @GetMapping("/{id}")
-    public ExpenseResponse getById(@PathVariable Long id) {
-        return expenseService.getExpenseById(id);
-    }
-
     @GetMapping("/all")
     public List<ExpenseResponse> getAllExpenses() {
         return expenseService.getAllExpenses();
+    }
+
+    @GetMapping("/{id}")
+    public ExpenseResponse getById(@PathVariable Long id) {
+        return expenseService.getExpenseById(id);
     }
 
     @DeleteMapping("/{id}")
