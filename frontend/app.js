@@ -2,16 +2,17 @@ const apiUrl = 'http://localhost:8080/api/expenses'; // Update with your backend
 
 document.getElementById('expenseForm').addEventListener('submit', addExpense);
 document.getElementById('fetchExpensesBtn').addEventListener('click', fetchExpenses);
+document.getElementById('searchByCategoryForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Prevent form submission from reloading the page
 
-async function fetchExpenses() {
-    try {
-        const response = await fetch(apiUrl + '/all');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+    const category = document.getElementById('searchCategory').value.trim();
+    if (category) {
+        fetchExpensesByCategory(category); // Call the fetch method with the entered category
+    }
+});
 
-        const expenses = await response.json();
-        const tbody = document.querySelector('#expenseTable tbody');
+function displayExpenses(expenses) {
+    const tbody = document.querySelector('#expenseTable tbody');
         tbody.innerHTML = '';
 
         expenses.forEach(expense => {
@@ -28,11 +29,41 @@ async function fetchExpenses() {
             `;
             tbody.appendChild(row);
         });
+}
+
+
+async function fetchExpenses() {
+    try {
+        const response = await fetch(apiUrl + '/all');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const expenses = await response.json();
+        displayExpenses(expenses);
     } catch (error) {
         console.error('Error fetching expenses:', error);
         alert('Failed to fetch expenses. Check the console for more details.');
     }
 }
+
+
+async function fetchExpensesByCategory(category) {
+    try {
+        const response = await fetch(`http://localhost:8080/api/expenses?cat=${category}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch expenses by category');
+        }
+
+        // Parse the JSON response
+        const expensesByCategory = await response.json();
+        displayExpenses(expensesByCategory); // Call display function to update the UI
+    } catch (error) {
+        console.error(error);
+        alert('Error fetching expenses by category');
+    }
+}
+
 
 async function addExpense(event) {
     event.preventDefault();
@@ -55,6 +86,7 @@ async function addExpense(event) {
     fetchExpenses(); // Refresh the expense list after adding
 }
 
+
 async function deleteExpense(id) {
     const confirmDelete = confirm("Are you sure you want to delete this expense?");
     if (!confirmDelete) {
@@ -72,6 +104,7 @@ async function deleteExpense(id) {
         alert('Failed to delete expense. Check the console for more details.');
     }
 }
+
 
 async function editExpense(id) {
     const expense = await fetch(`${apiUrl}/${id}`).then(res => res.json());
