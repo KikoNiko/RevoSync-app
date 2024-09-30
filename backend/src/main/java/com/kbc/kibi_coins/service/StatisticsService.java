@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 
 import static com.kbc.kibi_coins.util.ConstantMessages.INVALID_CATEGORY;
 
@@ -17,18 +19,14 @@ public class StatisticsService {
 
     private final ExpenseRepository expenseRepository;
 
-    public BigDecimal spentThisMonth(int year, short month) {
-        return expenseRepository.findAllByDate_Month(year, month)
-                .stream()
-                .map(Expense::getAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    public BigDecimal spentByMonth(int year, int month) {
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
+        return expenseRepository.sumExpensesInDateRange(startDate, endDate);
     }
 
     public BigDecimal spentThisYear(int year) {
-        return expenseRepository.findAllByDate_Year(year)
-                .stream()
-                .map(Expense::getAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return expenseRepository.sumExpensesByYear(year);
     }
 
     public BigDecimal spentByCategory(String category) {

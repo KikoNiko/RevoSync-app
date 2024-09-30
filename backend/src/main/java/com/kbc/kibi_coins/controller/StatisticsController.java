@@ -2,6 +2,7 @@ package com.kbc.kibi_coins.controller;
 
 import com.kbc.kibi_coins.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -12,12 +13,13 @@ import java.math.BigDecimal;
 public class StatisticsController {
     private final StatisticsService statisticsService;
 
-    @GetMapping("/{year}")
-    public BigDecimal getSpentByMonth(@PathVariable int year, @RequestParam(value = "month") short month) {
-        return statisticsService.spentThisMonth(year, month);
+    @GetMapping("/spent-this-month")
+    public ResponseEntity<BigDecimal> getSpentThisMonth(@RequestParam int year, @RequestParam int month) {
+        BigDecimal amountSpent = statisticsService.spentByMonth(year, month);
+        return ResponseEntity.ok(amountSpent);
     }
 
-    @GetMapping
+    @GetMapping("spent-by-year")
     public BigDecimal getSpentByYear(@RequestParam int year) {
         return statisticsService.spentThisYear(year);
     }

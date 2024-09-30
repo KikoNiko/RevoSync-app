@@ -19,12 +19,12 @@ document.getElementById('fetchSpentThisMonth').addEventListener('click', async f
 
     try {
         // Fetch the data from the backend API
-        const response = await fetch(statisticsUrl + `/${currentYear}?month=${currentMonth}`);
+        const response = await fetch(statisticsUrl + `/spent-this-month?year=${currentYear}&month=${currentMonth}`);
         
         if (response.ok) {
             const amountSpent = await response.json();
             // Update the result on the page
-            document.getElementById('expense-result').textContent = `Total spent this month: $${amountSpent}`;
+            document.getElementById('expense-result').textContent = `Total spent this month: ${amountSpent}lv`;
         } else {
             console.error('Failed to fetch data from the server');
         }
