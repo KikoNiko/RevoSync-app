@@ -1,4 +1,5 @@
-const apiUrl = 'http://localhost:8080/api/expenses'; // Update with your backend URL
+const apiUrl = 'http://localhost:8080/api/expenses';
+const statisticsUrl = 'http://localhost:8080/api/statistics';
 
 document.getElementById('expenseForm').addEventListener('submit', addExpense);
 document.getElementById('fetchExpensesBtn').addEventListener('click', fetchExpenses);
@@ -11,10 +12,31 @@ document.getElementById('searchByCategoryForm').addEventListener('submit', funct
     }
 });
 
+document.getElementById('fetchSpentThisMonth').addEventListener('click', async function() {
+    // Get the current year and month
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1;
+
+    try {
+        // Fetch the data from the backend API
+        const response = await fetch(statisticsUrl + `/${currentYear}?month=${currentMonth}`);
+        
+        if (response.ok) {
+            const amountSpent = await response.json();
+            // Update the result on the page
+            document.getElementById('expense-result').textContent = `Total spent this month: $${amountSpent}`;
+        } else {
+            console.error('Failed to fetch data from the server');
+        }
+    } catch (error) {
+        console.error('Error fetching the data:', error);
+    }
+});
+
 function displayExpenses(expenses) {
     const tbody = document.querySelector('#expenseTable tbody');
         tbody.innerHTML = '';
-
+        
         expenses.forEach(expense => {
             const row = document.createElement('tr');
             row.innerHTML = `
