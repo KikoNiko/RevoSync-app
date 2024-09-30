@@ -33,6 +33,23 @@ document.getElementById('fetchSpentThisMonth').addEventListener('click', async f
     }
 });
 
+document.getElementById('fetchSpentByYear').addEventListener('click', async function() {
+    const currentYear = new Date().getFullYear();
+
+    try {
+        const response = await fetch(statisticsUrl + `/spent-by-year?year=${currentYear}`);
+        
+        if (response.ok) {
+            const amountSpent = await response.json();
+            document.getElementById('expense-result-year').textContent = `Total spent this year: ${amountSpent}lv`;
+        } else {
+            console.error('Failed to fetch data from the server');
+        }
+    } catch (error) {
+        console.error('Error fetching the data:', error);
+    }
+});
+
 function displayExpenses(expenses) {
     const tbody = document.querySelector('#expenseTable tbody');
         tbody.innerHTML = '';
