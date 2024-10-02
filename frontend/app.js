@@ -62,7 +62,6 @@ function displayExpenses(expenses) {
                 <td>${expense.date}</td>
                 <td>${expense.comment}</td>
                 <td>
-                    <button onclick="editExpense(${expense.id})">Edit</button>
                     <button onclick="deleteExpense(${expense.id})">Delete</button>
                 </td>
             `;
@@ -106,9 +105,10 @@ async function fetchExpensesByCategory(category) {
 
 async function addExpense(event) {
     event.preventDefault();
+    const categorySelect = document.getElementById('category-select');
     const expense = {
         amount: parseFloat(document.getElementById('amount').value),
-        category: document.getElementById('category').value,
+        category: categorySelect.options[categorySelect.selectedIndex].text,
         date: document.getElementById('date').value,
         comment: document.getElementById('comment').value
     };
@@ -144,35 +144,29 @@ async function deleteExpense(id) {
     }
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    async function fetchCategories() {
+        try {
+            // Fetch categories from the backend API
+            const response = await fetch('http://localhost:8080/api/categories');
+            const categories = await response.json();
 
-async function editExpense(id) {
-    const expense = await fetch(`${apiUrl}/${id}`).then(res => res.json());
-    document.getElementById('amount').value = expense.amount;
-    document.getElementById('category').value = expense.category;
-    document.getElementById('date').value = expense.date;
-    document.getElementById('comment').value = expense.comment;
+            // Find the select element
+            const categorySelect = document.getElementById('category-select');
 
-    // Update form submission to edit expense
-    document.getElementById('expenseForm').onsubmit = async function(event) {
-        event.preventDefault();
-        const updatedExpense = {
-            ...expense,
-            amount: parseFloat(document.getElementById('amount').value),
-            category: document.getElementById('category').value,
-            date: document.getElementById('date').value,
-            comment: document.getElementById('comment').value
-        };
+            // Populate the select element with categories
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id; // Use category ID as the value
+                option.text = category.name; // Display category name
+                categorySelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
+    }
 
-        await fetch(`${apiUrl}/${id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedExpense)
-        });
+    // Fetch categories when the page is loaded
+    fetchCategories();
+});
 
-        document.getElementById('expenseForm').reset();
-        document.getElementById('expenseForm').onsubmit = addExpense;
-        fetchExpenses();
-    };
-}

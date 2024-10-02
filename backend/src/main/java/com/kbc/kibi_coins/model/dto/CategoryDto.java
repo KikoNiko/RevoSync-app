@@ -1,5 +1,6 @@
 package com.kbc.kibi_coins.model.dto;
 
+import com.kbc.kibi_coins.model.Category;
 import lombok.Getter;
 import lombok.Setter;
 

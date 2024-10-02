@@ -34,11 +34,20 @@ public class StatisticsService {
             throw new InvalidCategoryException(String.format(INVALID_CATEGORY, category));
         }
 
-        return expenseRepository
+        BigDecimal result =  expenseRepository
                 .getAllByCategory_NameOrderByDateDesc(CategoryEnum.valueOf(category.toUpperCase()))
                 .stream()
                 .map(Expense::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        if (category.equalsIgnoreCase("food")) {
+            BigDecimal groceries = spentByCategory("groceries");
+            BigDecimal fastFood = spentByCategory("fast_food");
+            BigDecimal restaurants = spentByCategory("restaurants");
+            return result.add(groceries).add(fastFood).add(restaurants);
+        }
+
+        return result;
     }
 
 }

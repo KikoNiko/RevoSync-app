@@ -44,6 +44,7 @@ form {
 input[type="number"],
 input[type="text"],
 input[type="date"],
+select,
 button {
     padding: 10px;
     border: 1px solid #ccc;
@@ -59,6 +60,15 @@ button {
 
 button:hover {
     background-color: #218838;
+}
+
+.display-expenses {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: c;
+    gap: 1em;
 }
 
 table {

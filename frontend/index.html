@@ -14,7 +14,9 @@
         <h2>Add Expense</h2>
         <form id="expenseForm">
             <input type="number" step="0.01" id="amount" placeholder="Amount" required>
-            <input type="text" id="category" placeholder="Category" required>
+            <select id="category-select" required>
+                <option value="">Select a category</option>
+            </select>
             <input type="date" id="date" required>
             <input type="text" id="comment" placeholder="Comment">
             <button type="submit">Add Expense</button>
