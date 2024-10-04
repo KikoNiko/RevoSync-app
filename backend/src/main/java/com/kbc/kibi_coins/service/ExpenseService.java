@@ -3,16 +3,29 @@ package com.kbc.kibi_coins.service;
 import com.kbc.kibi_coins.model.Category;
 import com.kbc.kibi_coins.model.CategoryEnum;
 import com.kbc.kibi_coins.model.Expense;
+import com.kbc.kibi_coins.model.dto.ExpenseCsvRepresentation;
 import com.kbc.kibi_coins.model.dto.ExpenseRequest;
 import com.kbc.kibi_coins.model.dto.ExpenseResponse;
 import com.kbc.kibi_coins.repository.CategoryRepository;
 import com.kbc.kibi_coins.repository.ExpenseRepository;
 import com.kbc.kibi_coins.util.InvalidCategoryException;
 import com.kbc.kibi_coins.util.Patcher;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -74,6 +87,14 @@ public class ExpenseService {
     }
 
     private ExpenseResponse mapToResponse(Expense exp) {
+        if (exp.getCategory() == null) {
+            return ExpenseResponse.builder()
+                    .id(exp.getId())
+                    .amount(exp.getAmount())
+                    .date(exp.getDate())
+                    .comment(exp.getComment())
+                    .build();
+        }
         return ExpenseResponse.builder()
                 .id(exp.getId())
                 .amount(exp.getAmount())
@@ -124,5 +145,55 @@ public class ExpenseService {
                 .map(this::mapToResponse)
                 .sorted(Comparator.comparing(ExpenseResponse::getDate).reversed())
                 .collect(Collectors.toList());
+    }
+
+    public Integer uploadExpenses(MultipartFile file) throws IOException {
+        List<Expense> expenses = parseCsv(file);
+        expenseRepository.saveAll(expenses);
+        return expenses.size();
+    }
+
+    private List<Expense> parseCsv(MultipartFile file) throws IOException {
+        try(Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            HeaderColumnNameMappingStrategy<ExpenseCsvRepresentation> strategy
+                    = new HeaderColumnNameMappingStrategy<>();
+            strategy.setType(ExpenseCsvRepresentation.class);
+
+            CsvToBean<ExpenseCsvRepresentation> csvToBean
+                    = new CsvToBeanBuilder<ExpenseCsvRepresentation>(reader)
+                    .withMappingStrategy(strategy)
+                    .withIgnoreEmptyLine(true)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+
+            return csvToBean.parse()
+                    .stream()
+                    .map(csvLine -> {
+                        BigDecimal expenseAmount = verifyExpenseAmount(csvLine.getAmount());
+                        if (expenseAmount != null) {
+                            return Expense.builder()
+                                    .date(parseDate(csvLine.getDate()))
+                                    .comment(csvLine.getDescription())
+                                    .amount(expenseAmount)
+                                    .build();
+                        }
+                        return null;
+                    })
+                    .filter(Objects::nonNull).toList();
+        }
+    }
+
+    private LocalDate parseDate(String date) {
+        String localDate = date.split("\\s+")[0];
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(localDate, formatter);
+    }
+
+    private BigDecimal verifyExpenseAmount(String amount) {
+        if (amount.startsWith("-")) {
+            return  new BigDecimal(amount.substring(1));
+        } else {
+            return null;
+        }
     }
 }

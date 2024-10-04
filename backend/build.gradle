@@ -37,7 +37,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.testcontainers/postgresql
 	testImplementation 'org.testcontainers:postgresql:1.20.1'
 
-
+	// https://mvnrepository.com/artifact/com.opencsv/opencsv
+	implementation 'com.opencsv:opencsv:5.9'
 
 	compileOnly 'org.projectlombok:lombok:1.18.34'
 	annotationProcessor 'org.projectlombok:lombok:1.18.34'

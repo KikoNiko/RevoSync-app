@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -24,6 +26,11 @@ public class ExpenseController {
     @ResponseStatus(HttpStatus.CREATED)
     public ExpenseResponse addExpense(@Valid @RequestBody ExpenseRequest expenseRequest) {
         return expenseService.addExpense(expenseRequest);
+    }
+
+    @PostMapping(value = "/upload", consumes = {"multipart/form-data"})
+    public ResponseEntity<Integer> uploadExpenses(@RequestPart("file") MultipartFile file) throws IOException {
+        return ResponseEntity.ok(expenseService.uploadExpenses(file));
     }
 
     @GetMapping("/all")
