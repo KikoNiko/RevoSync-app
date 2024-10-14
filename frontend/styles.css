@@ -44,6 +44,7 @@ form {
 input[type="number"],
 input[type="text"],
 input[type="date"],
+input[type="submit"],
 select,
 button {
     padding: 10px;
@@ -60,6 +61,24 @@ button {
 
 button:hover {
     background-color: #218838;
+}
+
+.statement-upload {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-bottom: 0;
+}
+
+
+input[type="submit"] {
+    cursor: pointer;
+    outline: 1px solid black;
+    background: silver;
+}
+
+input[type="submit"]:hover {
+    background: beige;
 }
 
 .display-expenses {

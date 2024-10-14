@@ -31,8 +31,23 @@
                     <input type="text" id="searchCategory" placeholder="Search by Category" required>
                     <button type="submit">Search</button>
                 </form>
-    
             </div>
+
+            <fieldset class="statement-upload">
+                <legend>Upload Revolut Statement (.csv)</legend>
+                
+                <div class="file-upload">
+                    <form id="statementUploadForm">
+                        <input type="file" name="file" id="fileInput"
+                        accept=".csv">
+
+                        <input type="submit" value="Upload">
+                    </form>
+                </div>
+                <p id="responseMessage"></p>
+            </fieldset>
+
+            
     
             <div class="container-statistics">
                 <button id="fetchSpentThisMonth">Spent This Month</button>

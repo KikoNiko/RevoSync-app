@@ -170,3 +170,33 @@ document.addEventListener("DOMContentLoaded", function() {
     fetchCategories();
 });
 
+
+document.getElementById("statementUploadForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const fileInput = document.getElementById("fileInput");
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("Please select a file first.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    // Send the file using fetch
+    fetch("http://localhost:8080/api/expenses/upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.text())
+    .then(result => {
+        document.getElementById("responseMessage").textContent = result;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById("responseMessage").textContent = "Error uploading file";
+    });
+});
+
