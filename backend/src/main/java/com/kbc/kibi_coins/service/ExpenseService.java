@@ -3,6 +3,7 @@ package com.kbc.kibi_coins.service;
 import com.kbc.kibi_coins.model.Category;
 import com.kbc.kibi_coins.model.CategoryEnum;
 import com.kbc.kibi_coins.model.Expense;
+import com.kbc.kibi_coins.model.Statement;
 import com.kbc.kibi_coins.model.dto.ExpenseCsvRepresentation;
 import com.kbc.kibi_coins.model.dto.ExpenseRequest;
 import com.kbc.kibi_coins.model.dto.ExpenseResponse;
@@ -19,10 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -38,6 +36,7 @@ public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
+    private final StatementService statementService;
 
     public ExpenseResponse addExpense(ExpenseRequest expenseRequest) {
         if (isCategoryInvalid(expenseRequest.getCategory())) {
@@ -148,8 +147,13 @@ public class ExpenseService {
     }
 
     public Integer uploadExpenses(MultipartFile file) throws IOException {
+        String fileChecksum = statementService.getFileChecksum(file);
+        if (statementService.isFileProcessed(fileChecksum)) {
+            return -1;
+        }
         List<Expense> expenses = parseCsv(file);
         expenseRepository.saveAll(expenses);
+        statementService.saveFileMetadata(fileChecksum);
         return expenses.size();
     }
 
