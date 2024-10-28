@@ -3,7 +3,6 @@ package com.kbc.kibi_coins.service;
 import com.kbc.kibi_coins.model.Category;
 import com.kbc.kibi_coins.model.CategoryEnum;
 import com.kbc.kibi_coins.model.Expense;
-import com.kbc.kibi_coins.model.Statement;
 import com.kbc.kibi_coins.model.dto.ExpenseCsvRepresentation;
 import com.kbc.kibi_coins.model.dto.ExpenseRequest;
 import com.kbc.kibi_coins.model.dto.ExpenseResponse;
@@ -195,7 +194,7 @@ public class ExpenseService {
 
     private BigDecimal verifyExpenseAmount(String amount) {
         if (amount.startsWith("-")) {
-            return  new BigDecimal(amount.substring(1));
+            return new BigDecimal(amount.substring(1));
         } else {
             return null;
         }

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Kibi Coins</title>
+    <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+
+    <main>
+        <section class="formSection">
+            <div class="container formContainer">
+                <form action="#" method="post">
+                    <fieldset class="addExpenseContainer">
+                        <legend>Add a new expense</legend>
+
+                        <label class="formLabel" for="amount">Enter amount in lv. :</label>
+                        <input class="formInput" type="number" id="amount" name="amount" step="0.1" required>
+                        
+                        <label class="formLabel" for="category">Select cateogory :</label>
+                        <select class="formInput" id="category-select" name="category" required>
+                            <option class="formInput" value=""></option>
+                        </select>
+
+                        <label class="formLabel" for="date">Enter the date of the expense :</label>
+                        <input class="formInput" type="date" id="date" name="date" required>
+
+                        <label class="formLabel" for="comment">Write a comment here :</label>
+                        <input class="formInput" type="text" id="comment" name="comment" placeholder="Comment...">
+
+                        <input class="btn btn-submit" type="submit" value="Add Expense"></input>
+                    </fieldset>
+                </form>
+            </div>
+        </section>
+
+        <section class="showExpensesSection">
+            <div class="container showExpensesContainer">
+                <ul class="outerList">
+                    <li>
+                        <ul class="innerList">
+                            <li>Amount</li>
+                            <li>Category</li>
+                            <li>Date</li>
+                            <li><a class="editBtn" href="#">Edit</a></li>
+                            <li><a class="deleteBtn" href="#">Delete</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul class="innerList">
+                            <li>Amount</li>
+                            <li>Category</li>
+                            <li>Date</li>
+                            <li><a class="editBtn" href="#">Edit</a></li>
+                            <li><a class="deleteBtn" href="#">Delete</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <ul class="innerList">
+                            <li>Amount</li>
+                            <li>Category</li>
+                            <li>Date</li>
+                            <li><a class="editBtn" href="#">Edit</a></li>
+                            <li><a class="deleteBtn" href="#">Delete</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+    
+</body>
+</html>
