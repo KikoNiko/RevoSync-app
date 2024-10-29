@@ -12,18 +12,29 @@ html {
 
 body {
     font: inherit;
-    background: #FFFFFF;
+    background: #F3F3F3;
     display: flex;
     height: 100vh;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     margin: 50px 0;
 }
+
 li {
     list-style: none;
 }
 a {
     text-decoration: none;
+}
+.navContainer {
+    border-radius: 0 !important;
+}
+
+.navContainer ul li {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
 }
 
 main {
@@ -33,10 +44,10 @@ main {
 }
 
 .container {
-    max-width: 900px;
-    background: #EEEEEE;
+    width: 500px;
+    background: #F3F3F3;
     padding: 30px;
-    border-radius: 30px;
+    border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 
@@ -46,14 +57,14 @@ main {
     flex-wrap: wrap;
     flex-direction: column;
     gap: 15px;
-    border-radius: 40px;
-    border: 1px solid #31363F;
+    border-radius: 30px;
+    border: 1px solid #0766AD;
 }
 
 .addExpenseContainer > legend {
     font-size: 30px;
     font-weight: 800;
-    color: #222831;
+    color: #0766AD;
     text-align: center;
     padding: 0 30px;
 }
@@ -62,6 +73,7 @@ main {
     padding: 10px;
     margin: 0 20px;
     border: none;
+    outline: none;
 }
 
 .formLabel {
@@ -73,8 +85,8 @@ main {
     margin: 20px auto;
     padding: 10px 30px;
     border: none;
-    background: #31363F;
-    color: #76ABAE;
+    background: #C5E898;
+    color: #0766AD;
     font-size: 20px;
     font-weight: 700;
     border-radius: 10px;
@@ -86,19 +98,25 @@ main {
     rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
 }
 
-
 .outerList {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
 }
 .innerList {
     display: flex;
     justify-content: space-between;
-    margin: 0 20px;
+    background: #FFF;
+    padding: 15px 20px;
+    outline: 1px solid #C5E898;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+.innerList:hover {
+    background: #C5E898;
 }
 
 .editBtn {
     color: red;
     font-style: italic;
 }
+
