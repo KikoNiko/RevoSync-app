@@ -5,46 +5,57 @@
     margin: 0;
     box-sizing: border-box;
 }
-
 html {
     font: 16px/1.5 'Josefin Sans', sans-serif;
 }
-
 body {
     font: inherit;
     background: #F3F3F3;
-    display: flex;
-    height: 100vh;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    margin: 50px 0;
+    --nav-height: 50px;
+    padding-top: var(--nav-height);
 }
-
 li {
     list-style: none;
 }
 a {
     text-decoration: none;
 }
+
+.nav {
+    width: 100%;
+    height: var(--nav-height);
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: transform 0.5s;
+    z-index: 999;
+}
+.nav--hidden {
+    transform: translateY(calc(-1 * var(--nav-height) - 5px));
+}
 .navContainer {
     border-radius: 0 !important;
+    height: var(--nav-height);
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
 .navContainer ul li {
     display: flex;
-    gap: 20px;
-    justify-content: space-between;
+    gap: 40px;
 }
 
 main {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     gap: 30px;
+    margin-top: 30px;
 }
 
 .container {
-    width: 500px;
+    max-width: 900px;
+    margin: 0 auto;
     background: #F3F3F3;
     padding: 30px;
     border-radius: 5px;
@@ -60,7 +71,6 @@ main {
     border-radius: 30px;
     border: 1px solid #0766AD;
 }
-
 .addExpenseContainer > legend {
     font-size: 30px;
     font-weight: 800;
@@ -75,7 +85,6 @@ main {
     border: none;
     outline: none;
 }
-
 .formLabel {
     margin-left: 20px;
 }
@@ -106,6 +115,7 @@ main {
 .innerList {
     display: flex;
     justify-content: space-between;
+    gap: 15px;
     background: #FFF;
     padding: 15px 20px;
     outline: 1px solid #C5E898;
