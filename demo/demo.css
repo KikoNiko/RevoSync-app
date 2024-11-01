@@ -45,6 +45,15 @@ a {
     display: flex;
     gap: 40px;
 }
+.navContainer ul li a {
+    color: #0766AD;
+}
+.navContainer ul li a:hover  {
+    font-size: 1.2rem;
+}
+.x-close, .burger-menu {
+    display: none;
+}
 
 main {
     display: flex;
