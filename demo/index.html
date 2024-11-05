@@ -4,22 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Demo Kibi Coins</title>
-    <link rel="stylesheet" href="demo.css">
-    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="static/css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 <body>
 
     <section class="nav">
-        <nav class="container navContainer">
+        <nav class="navContainer">
             <ul>
                 <li>
                     <a href="#" class="burger-menu"><i class="fa-solid fa-bars"></i></a>
                     <a href="#">Home</a>
-                    <a href="#">Add Expense</a>
                     <a href="#">Upload Statement</a>
                     <a href="#">Statistics</a>
-                    <a href="#" class="x-close">X</a>
+                    <a href="#" class="x-close" id="x-close navbar-close">X</a>
                 </li>
             </ul>
         </nav>
@@ -27,7 +26,7 @@
 
     <main>
         <section class="formSection">
-            <div class="container formContainer">
+            <div class="container">
                 <form action="#" method="post">
                     <fieldset class="addExpenseContainer">
                         <legend>Add a new expense</legend>
@@ -52,8 +51,27 @@
             </div>
         </section>
 
+        <section class="uploadSection">
+            <div class="container">
+                <form class="fileUploadForm" action="#" method="post">
+                    <h2 class="uploadTitle">Upload Revolut Statement</h2>
+                    <label for="fileInput" class="btn-submit uploadLabel"> <i class="fa-solid fa-upload"></i> </label>
+                    <input class="formInput fileInput" type="file" name="fileInput" id="fileInput">
+                </form>
+            </div>
+        </section>
+
         <section class="showExpensesSection">
             <div class="container showExpensesContainer">
+                <section class="statisticsNav">
+                    <ul>
+                        <li>        
+                            <a href="#">Spent this month</a>
+                            <a href="#">Spent By Category</a>
+                            <a href="#">All time expenses</a>
+                        </li>
+                    </ul>
+                </section>
                 <ul class="outerList">
                     <li>
                         <ul class="innerList">
@@ -98,5 +116,5 @@
     
 </body>
 
-<script src="nav.js"></script>
+<script src="static/js/nav.js"></script>
 </html>
