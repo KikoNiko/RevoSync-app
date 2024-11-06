@@ -1,4 +1,4 @@
-@media (max-width: 600px) {
+@media (max-width: 700px) {
     main {
         flex-direction: column;
     }
@@ -32,5 +32,43 @@
     .burger-menu:hover {
         opacity: 0.8;
         font-size: 1.5rem !important;
+    }
+
+    .statisticsNav ul li {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .expenseTable {
+        border: none;
+    }
+    .headerList {
+        display: none;
+    }
+    .innerList, .innerList td {
+        display: block;
+        width: 100%;
+    }
+    .innerList {
+        margin-bottom: 50px;
+    }
+    .innerList td {
+        text-align: right;
+        position: relative;
+        border-bottom: none;
+        border-top: 1px solid #C5E898;
+        border-left: 1px solid #C5E898;
+        border-right: 1px solid #C5E898;
+    }
+    .innerList td:last-of-type {
+        border-bottom: 1px solid #C5E898;
+    }
+    .innerList td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        text-align: left;
+        padding-left: 10px;
+        width: 50%;
     }
 }

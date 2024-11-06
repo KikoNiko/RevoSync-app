@@ -18,7 +18,7 @@
                     <div class="menu">
                         <a href="#">Home</a>
                         <a href="#upload">Upload Statement</a>
-                        <a href="#">Statistics</a>
+                        <a href="#statistics">Statistics</a>
                     </div>
                 </li>
             </ul>
@@ -28,14 +28,14 @@
     <main>
         <section class="formSection">
             <div class="container">
-                <form action="#" method="post">
+                <form id="expenseForm">
                     <fieldset class="addExpenseContainer">
                         <legend>Add a new expense</legend>
 
                         <label class="formLabel" for="amount">Enter amount in lv. :</label>
                         <input class="formInput" type="number" id="amount" name="amount" step="0.1" required>
                         
-                        <label class="formLabel" for="category">Select cateogory :</label>
+                        <label class="formLabel" for="category-select">Select cateogory :</label>
                         <select class="formInput" id="category-select" name="category" required>
                             <option class="formInput" value=""></option>
                         </select>
@@ -54,63 +54,51 @@
 
         <section class="uploadSection" id="upload">
             <div class="container">
-                <form class="fileUploadForm" action="#" method="post">
+                <form class="fileUploadForm" id="statementUploadForm">
                     <h2 class="uploadTitle">Upload Revolut Statement</h2>
-                    <label for="fileInput" class="btn-submit uploadLabel"> <i class="fa-solid fa-upload"></i> </label>
-                    <input class="formInput fileInput" type="file" name="fileInput" id="fileInput">
+                    <div class="inputGroup">
+                        <div class="group1">
+                            <label for="fileInput" class="chooseFile">Choose file</label>
+                            <input class="formInput fileInput" type="file"
+                            name="fileInput"
+                            id="fileInput" 
+                            accept=".csv">
+                        </div>
+                        <div class="group2">
+                            <label class="btn-submit" for="uploadBtn"><i class="fa-solid fa-upload"></i></label>
+                            <input id="uploadBtn" type="submit" value="">
+                        </div>
+                    </div>
+                    <p id="responseMessage"></p>
                 </form>
             </div>
         </section>
 
-        <section class="showExpensesSection">
+        <section class="showExpensesSection" id="statistics">
             <div class="container showExpensesContainer">
                 <section class="statisticsNav">
+                    <h2 class="myExpenses-title">My Expenses</h2>
                     <ul>
                         <li>        
                             <a href="#">Spent this month</a>
                             <a href="#">Spent By Category</a>
-                            <a href="#">All time expenses</a>
+                            <a href="#statistics" id="fetchAllBtn">All time expenses</a>
                         </li>
                     </ul>
                 </section>
-                <ul class="outerList">
-                    <li>
-                        <ul class="innerList">
-                            <li>Amount</li>
-                            <li>Category</li>
-                            <li>Date</li>
-                            <li><a class="editBtn" href="#">Edit</a></li>
-                            <li><a class="deleteBtn" href="#">Delete</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <ul class="innerList">
-                            <li>Amount</li>
-                            <li>Category</li>
-                            <li>Date</li>
-                            <li><a class="editBtn" href="#">Edit</a></li>
-                            <li><a class="deleteBtn" href="#">Delete</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <ul class="innerList">
-                            <li>Amount</li>
-                            <li>Category</li>
-                            <li>Date</li>
-                            <li><a class="editBtn" href="#">Edit</a></li>
-                            <li><a class="deleteBtn" href="#">Delete</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <ul class="innerList">
-                            <li>Amount</li>
-                            <li>Category</li>
-                            <li>Date</li>
-                            <li><a class="editBtn" href="#">Edit</a></li>
-                            <li><a class="deleteBtn" href="#">Delete</a></li>
-                        </ul>
-                    </li>
-                </ul>
+
+                <table id="expenseTable" class="expenseTable">
+                    <thead>
+                        <tr class="headerList">
+                            <th>Amount</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                            <th>Comment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="expensesContainer"></tbody>
+                </table>
             </div>
         </section>
     </main>
@@ -118,4 +106,5 @@
 </body>
 
 <script src="static/js/nav.js"></script>
+<script src="static/js/main.js"></script>
 </html>
