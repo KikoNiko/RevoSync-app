@@ -1,0 +1,14 @@
+[
+    {"month": "January", "moneySpent": 1230.80},
+    {"month": "February", "moneySpent": 1034.70},
+    {"month": "March", "moneySpent": 1334.50},
+    {"month": "April", "moneySpent": 1004.40},
+    {"month": "May", "moneySpent": 1203.10},
+    {"month": "June", "moneySpent": 1179.20},
+    {"month": "July", "moneySpent": 1020.50},
+    {"month": "August", "moneySpent": 1430.60},
+    {"month": "September", "moneySpent": 1350.70},
+    {"month": "October", "moneySpent": 1408.30},
+    {"month": "November", "moneySpent": 1402.20},
+    {"month": "December", "moneySpent": 1021.00}
+]

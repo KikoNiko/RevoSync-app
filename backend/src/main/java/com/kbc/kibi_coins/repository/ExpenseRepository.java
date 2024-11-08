@@ -2,6 +2,7 @@ package com.kbc.kibi_coins.repository;
 
 import com.kbc.kibi_coins.model.CategoryEnum;
 import com.kbc.kibi_coins.model.Expense;
+import com.kbc.kibi_coins.model.dto.SpentByMonthDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +26,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
     @Query("SELECT COALESCE(SUM(e.amount), 0) FROM Expense e WHERE e.date BETWEEN :startDate AND :endDate")
     BigDecimal sumExpensesInDateRange(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
+    @Query("SELECT COALESCE(SUM(e.amount), 0) FROM Expense e WHERE YEAR(e.date) = :year AND MONTH(e.date) = :month")
+    BigDecimal sumExpensesByMonth(@Param("year") int year, @Param(value = "month") short month);
 }

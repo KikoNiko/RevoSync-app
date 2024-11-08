@@ -171,6 +171,11 @@ main {
     margin-left: 10px;
     color: #0766AD;
 }
+.coins-icon {
+    font-size: 1.2rem;
+    color: goldenrod;
+    margin: 0 10px;
+}
 .statisticsNav {
     display: flex;
     gap: 40px;
@@ -179,6 +184,8 @@ main {
     background: #C5E898;
     margin-bottom: 15px;
     padding: 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 .statisticsNav ul li {
     display: flex;

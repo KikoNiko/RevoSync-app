@@ -2,14 +2,18 @@ package com.kbc.kibi_coins.service;
 
 import com.kbc.kibi_coins.model.CategoryEnum;
 import com.kbc.kibi_coins.model.Expense;
+import com.kbc.kibi_coins.model.dto.SpentByMonthDTO;
 import com.kbc.kibi_coins.repository.ExpenseRepository;
 import com.kbc.kibi_coins.util.InvalidCategoryException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.sql.Array;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.kbc.kibi_coins.util.ConstantMessages.INVALID_CATEGORY;
 
@@ -25,7 +29,7 @@ public class StatisticsService {
         return expenseRepository.sumExpensesInDateRange(startDate, endDate);
     }
 
-    public BigDecimal spentThisYear(int year) {
+    public BigDecimal spentByYear(int year) {
         return expenseRepository.sumExpensesByYear(year);
     }
 
@@ -34,7 +38,7 @@ public class StatisticsService {
             throw new InvalidCategoryException(String.format(INVALID_CATEGORY, category));
         }
 
-        BigDecimal result =  expenseRepository
+        BigDecimal result = expenseRepository
                 .getAllByCategory_NameOrderByDateDesc(CategoryEnum.valueOf(category.toUpperCase()))
                 .stream()
                 .map(Expense::getAmount)
@@ -50,4 +54,38 @@ public class StatisticsService {
         return result;
     }
 
+    public List<SpentByMonthDTO> getAllSpentByAllMonths() {
+        List<SpentByMonthDTO> allSpentByMonthData = new ArrayList<>();
+        int currentYear = LocalDate.now().getYear();
+        short[] months = new short[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+        for (short m : months) {
+            String monthName = mapMonthFromNumberToString(m);
+            SpentByMonthDTO dto =
+                    new SpentByMonthDTO(monthName, expenseRepository.sumExpensesByMonth(currentYear, m));
+            allSpentByMonthData.add(dto);
+        }
+
+        return allSpentByMonthData;
+    }
+
+    private String mapMonthFromNumberToString(short monthNumber) {
+        if (monthNumber < 1 || monthNumber > 12) {
+            return "Not a valid month number!";
+        }
+        return switch (monthNumber) {
+            case 1 -> "January";
+            case 2 -> "February";
+            case 3 -> "March";
+            case 4 -> "April";
+            case 5 -> "May";
+            case 6 -> "June";
+            case 7 -> "July";
+            case 8 -> "August";
+            case 9 -> "September";
+            case 10 -> "October";
+            case 11 -> "November";
+            case 12 -> "December";
+            default -> "";
+        };
+    }
 }

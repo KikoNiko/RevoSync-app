@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics</title>
+    
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+    <link rel="stylesheet" href="/static/css/statistics.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+    <section class="nav">
+        <nav class="navContainer">
+            <ul>
+                <li>
+                    <a href="#" class="burger-menu"><i class="fa-solid fa-bars"></i></a>
+                    <div class="menu">
+                        <a href="/index.html">Home</a>
+                        <a href="/index.html#upload">Upload Statement</a>
+                        <a href="statistics.html">Statistics</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </section>
+
+    <main>
+        <section class="charts">
+            <div class="container chartContainer">
+                <header class="chartHeader">
+                    <h2>Total <i class="fa-solid fa-coins coins-icon"></i> Spent By Month</h2>
+
+                    <div class="dropdown">
+                        <button class="dropbtn">Chart View</button>
+                        <div class="dropdown-content charTypeButtons">
+                            <button onclick="setCharType('bar')">Bar</button>
+                            <button onclick="setCharType('line')">Line</button>
+                            <button onclick="setCharType('pie')">Pie</button>
+                            <button onclick="setCharType('doughnut')">Doughnut</button>
+                            <button onclick="setCharType('polarArea')">Polar</button>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="chart">
+                    <canvas id="myChart"></canvas>
+                </div>
+
+            </div>
+        </section>
+    </main>
+   
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/js/statistics.js"></script>
+    <script src="/static/js/nav.js"></script>
+</body>
+</html>

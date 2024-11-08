@@ -71,4 +71,17 @@
         padding-left: 10px;
         width: 50%;
     }
+
+    .chartHeader {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .chartHeader h2 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        flex: 0 1 50%;
+    }
+    
 }

@@ -1,0 +1,38 @@
+.chart {
+    height: 400px;
+}
+
+.chartHeader {
+    position: relative;
+}
+.chartHeader h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #0766AD;
+}
+.dropdown {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.dropdown-content {
+    display: none;
+}
+.dropdown:hover .dropdown-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.charTypeButtons, .dropbtn {
+    width: 80px;
+}
+.dropbtn, 
+.charTypeButtons > button {
+    padding: 10px;
+    cursor: pointer;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    color: #0766AD;
+    border: none;
+    background: #F3F3F3;
+    font-size: 12px;
+}
