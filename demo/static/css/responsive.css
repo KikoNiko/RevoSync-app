@@ -34,7 +34,10 @@
         font-size: 1.5rem !important;
     }
 
-    .statisticsNav ul li {
+    .showExpensesNav {
+        gap: 10px;
+    }
+    .showExpensesNav ul li {
         flex-direction: column;
         gap: 10px;
     }

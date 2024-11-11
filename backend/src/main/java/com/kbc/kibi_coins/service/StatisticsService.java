@@ -1,8 +1,11 @@
 package com.kbc.kibi_coins.service;
 
+import com.kbc.kibi_coins.model.Category;
 import com.kbc.kibi_coins.model.CategoryEnum;
 import com.kbc.kibi_coins.model.Expense;
+import com.kbc.kibi_coins.model.dto.SpentByCategoryDTO;
 import com.kbc.kibi_coins.model.dto.SpentByMonthDTO;
+import com.kbc.kibi_coins.repository.CategoryRepository;
 import com.kbc.kibi_coins.repository.ExpenseRepository;
 import com.kbc.kibi_coins.util.InvalidCategoryException;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,7 @@ import static com.kbc.kibi_coins.util.ConstantMessages.INVALID_CATEGORY;
 public class StatisticsService {
 
     private final ExpenseRepository expenseRepository;
+    private final CategoryRepository categoryRepository;
 
     public BigDecimal spentByMonth(int year, int month) {
         LocalDate startDate = LocalDate.of(year, month, 1);
@@ -87,5 +91,19 @@ public class StatisticsService {
             case 12 -> "December";
             default -> "";
         };
+    }
+
+    public List<SpentByCategoryDTO> getAllSpentByCategories() {
+        List<SpentByCategoryDTO> allSpentByCategoriesData = new ArrayList<>();
+        List<Category> allCategories = categoryRepository.findAll();
+        allCategories.forEach(cat -> {
+            SpentByCategoryDTO dto =
+                    new SpentByCategoryDTO(
+                            String.valueOf(cat.getName()),
+                            spentByCategory(String.valueOf(cat.getName())));
+            allSpentByCategoriesData.add(dto);
+        });
+
+        return allSpentByCategoriesData;
     }
 }

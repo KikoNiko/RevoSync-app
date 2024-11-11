@@ -1,5 +1,6 @@
 package com.kbc.kibi_coins.controller;
 
+import com.kbc.kibi_coins.model.dto.SpentByCategoryDTO;
 import com.kbc.kibi_coins.model.dto.SpentByMonthDTO;
 import com.kbc.kibi_coins.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,10 @@ public class StatisticsController {
     @GetMapping("/all-spent-by-month")
     public List<SpentByMonthDTO> getAllSpentByAllMonths() {
         return statisticsService.getAllSpentByAllMonths();
+    }
+
+    @GetMapping("/all-spent-by-category")
+    public List<SpentByCategoryDTO> getAllSpentByCategories() {
+        return statisticsService.getAllSpentByCategories();
     }
 }

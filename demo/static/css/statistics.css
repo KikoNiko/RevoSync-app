@@ -1,3 +1,6 @@
+.chartContainer {
+    margin-bottom: 60px;
+}
 .chart {
     height: 400px;
 }

@@ -8,7 +8,7 @@ document.getElementById('searchByCategoryForm').addEventListener('submit', funct
 
     const category = document.getElementById('searchCategory').value.trim();
     if (category) {
-        fetchExpensesByCategory(category); // Call the fetch method with the entered category
+        fetchExpensesByCategory(category);
     }
 });
 
@@ -92,10 +92,8 @@ async function fetchExpensesByCategory(category) {
         if (!response.ok) {
             throw new Error('Failed to fetch expenses by category');
         }
-
-        // Parse the JSON response
         const expensesByCategory = await response.json();
-        displayExpenses(expensesByCategory); // Call display function to update the UI
+        displayExpenses(expensesByCategory);
     } catch (error) {
         console.error(error);
         alert('Error fetching expenses by category');

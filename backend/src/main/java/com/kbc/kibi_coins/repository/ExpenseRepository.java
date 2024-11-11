@@ -28,4 +28,5 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
     @Query("SELECT COALESCE(SUM(e.amount), 0) FROM Expense e WHERE YEAR(e.date) = :year AND MONTH(e.date) = :month")
     BigDecimal sumExpensesByMonth(@Param("year") int year, @Param(value = "month") short month);
+
 }

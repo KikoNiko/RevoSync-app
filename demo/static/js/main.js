@@ -3,6 +3,15 @@ const statisticsUrl = 'http://localhost:8080/api/statistics';
 
 document.getElementById('expenseForm').addEventListener('submit', addExpense);
 document.getElementById('fetchAllBtn').addEventListener('click', fetchExpenses);
+document.getElementById('fetchThisMonthBtn').addEventListener('click', fetchExpensesThisMonth);
+document.getElementById('searchByCategoryForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const category = document.getElementById('searchCategory').value.trim();
+    if (category) {
+        fetchExpensesByCategory(category);
+    }
+});
 
 
 function displayExpenses(expenses) {
@@ -18,7 +27,7 @@ function displayExpenses(expenses) {
                 <td data-label="Date">${expense.date}</td>
                 <td data-label="Comment">${expense.comment}</td>
                 <td data-label="Action">
-                    <button onclick="deleteExpense(${expense.id})" class="deleteBtn">Delete</button>
+                    <button onclick="deleteExpense(${expense.id})" class="deleteBtn"><i class="fa-solid fa-trash"></i></button>
                 </td>
             `;
             tbody.appendChild(row);
@@ -40,6 +49,64 @@ async function fetchExpenses() {
         alert('Failed to fetch expenses. Check the console for more details.');
     }
 }
+
+async function fetchExpensesByMonth(year, month) {
+    try {
+        const response = await fetch(apiUrl + `/${year}/${month}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const expenses = await response.json();
+        displayExpenses(expenses);
+    } catch (error) {
+        console.error('Error fetching expenses:', error);
+        alert('Failed to fetch expenses. Check the console for more details.');
+    }
+}
+
+function fetchExpensesThisMonth() {
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+    fetchExpensesByMonth(currentYear, currentMonth);
+}
+
+async function fetchExpensesByCategory(category) {
+    try {
+        const response = await fetch(`http://localhost:8080/api/expenses?cat=${category}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch expenses by category');
+        }
+        const expensesByCategory = await response.json();
+        displayExpenses(expensesByCategory);
+    } catch (error) {
+        console.error(error);
+        alert('Error fetching expenses by category');
+    }
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    async function fetchCategories() {
+        try {
+            const response = await fetch('http://localhost:8080/api/categories');
+            const categories = await response.json();
+
+            const categorySelect = document.getElementById('category-select');
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.text = category.name; 
+                categorySelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
+    }
+
+    // Fetch categories when the page is loaded
+    fetchCategories();
+});
 
 
 async function addExpense(event) {
@@ -65,32 +132,6 @@ async function addExpense(event) {
 }
 
 
-document.addEventListener("DOMContentLoaded", function() {
-    async function fetchCategories() {
-        try {
-            // Fetch categories from the backend API
-            const response = await fetch('http://localhost:8080/api/categories');
-            const categories = await response.json();
-
-            // Find the select element
-            const categorySelect = document.getElementById('category-select');
-
-            // Populate the select element with categories
-            categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category.id; // Use category ID as the value
-                option.text = category.name; // Display category name
-                categorySelect.appendChild(option);
-            });
-        } catch (error) {
-            console.error('Error fetching categories:', error);
-        }
-    }
-
-    // Fetch categories when the page is loaded
-    fetchCategories();
-});
-
 document.getElementById("statementUploadForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
@@ -106,8 +147,7 @@ document.getElementById("statementUploadForm").addEventListener("submit", functi
     const formData = new FormData();
     formData.append("file", file);
 
-    // Send the file using fetch
-    fetch("http://localhost:8080/api/expenses/upload", {
+    fetch(apiUrl + '/upload', {
         method: "POST",
         body: formData
     })
@@ -130,7 +170,7 @@ document.getElementById("statementUploadForm").addEventListener("submit", functi
 async function deleteExpense(id) {
     const confirmDelete = confirm("Are you sure you want to delete this expense?");
     if (!confirmDelete) {
-        return; // Exit the function if the user cancels
+        return;
     }
     
     try {

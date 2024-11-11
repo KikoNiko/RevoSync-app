@@ -74,14 +74,18 @@
             </div>
         </section>
 
-        <section class="showExpensesSection" id="statistics">
+        <section class="showExpensesSection" id="showExpenses">
             <div class="container showExpensesContainer">
-                <section class="statisticsNav">
+                <section class="showExpensesNav">
                     <h2 class="myExpenses-title">My Expenses <i class="fa-solid fa-coins coins-icon"></i></h2>
                     <ul>
-                        <li>        
-                            <a href="#">This month</a>
-                            <a href="#statistics" id="fetchAllBtn">All time expenses</a>
+                        <li>    
+                            <a id="fetchThisMonthBtn">This month</a>
+                            <a id="fetchAllBtn">All time expenses</a>
+                            <form id="searchByCategoryForm">
+                                <input class="searchCategoryInput" type="text" id="searchCategory" placeholder=" Search by Category" required>
+                                <button class="btn searchCategoryBtn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </form>   
                         </li>
                     </ul>
                 </section>
@@ -106,5 +110,4 @@
 
 <script src="static/js/nav.js"></script>
 <script src="static/js/main.js"></script>
-<script src="static/js/pagination.js"></script>
 </html>

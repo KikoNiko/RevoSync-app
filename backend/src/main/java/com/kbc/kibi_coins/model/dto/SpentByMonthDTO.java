@@ -35,8 +35,4 @@ public class SpentByMonthDTO {
             this.moneySpent = moneySpent;
         }
     }
-
-    public void setMoneySpent(BigDecimal moneySpent) {
-        this.moneySpent = moneySpent;
-    }
 }
