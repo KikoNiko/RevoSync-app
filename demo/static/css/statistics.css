@@ -13,6 +13,8 @@
     margin-bottom: 20px;
     color: #0766AD;
 }
+
+/* Buttons to update charTypes for now are not functional */
 .dropdown {
     position: absolute;
     top: 0;
