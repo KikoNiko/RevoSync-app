@@ -55,6 +55,12 @@ public class ExpenseController {
         return expenseService.updateExpenseByFields(id, incompleteExpense);
     }
 
+    @PostMapping("/categorize")
+    public ResponseEntity<String> categorizeExpenses() {
+        int processedExpenses = expenseService.categorizeExpenses();
+        return ResponseEntity.ok(String.format("%d expenses categorized.", processedExpenses));
+    }
+
     @GetMapping()
     public List<ExpenseResponse> getAllByCategory(@RequestParam(value = "cat") String category) {
         return expenseService.getAllByCategory(category);

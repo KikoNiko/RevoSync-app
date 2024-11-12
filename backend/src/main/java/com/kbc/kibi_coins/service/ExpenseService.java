@@ -36,6 +36,7 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
     private final StatementService statementService;
+    private final CategoryService categoryService;
 
     public ExpenseResponse addExpense(ExpenseRequest expenseRequest) {
         if (isCategoryInvalid(expenseRequest.getCategory())) {
@@ -150,6 +151,7 @@ public class ExpenseService {
         if (statementService.isFileProcessed(fileChecksum)) {
             return -1;
         }
+
         List<Expense> expenses = parseCsv(file);
         expenseRepository.saveAll(expenses);
         statementService.saveFileMetadata(fileChecksum);
@@ -173,11 +175,13 @@ public class ExpenseService {
                     .stream()
                     .map(csvLine -> {
                         BigDecimal expenseAmount = verifyExpenseAmount(csvLine.getAmount());
-                        if (expenseAmount != null) {
+                        boolean isValidDescription = verifyDescription(csvLine.getDescription());
+                        if (expenseAmount != null && isValidDescription) {
                             return Expense.builder()
                                     .date(parseDate(csvLine.getDate()))
                                     .comment(csvLine.getDescription())
                                     .amount(expenseAmount)
+                                    .category(categoryService.getCategoryFromDescription(csvLine.getDescription()))
                                     .build();
                         }
                         return null;
@@ -198,5 +202,21 @@ public class ExpenseService {
         } else {
             return null;
         }
+    }
+
+    private boolean verifyDescription(String description) {
+        return !description.contains("Exchanged to");
+    }
+
+    public int categorizeExpenses() {
+        int count = 0;
+        for (Expense e : expenseRepository.findAll()) {
+            e.setCategory(
+                    categoryService.getCategoryFromDescription(e.getComment())
+            );
+            expenseRepository.save(e);
+            count ++;
+        }
+        return count;
     }
 }

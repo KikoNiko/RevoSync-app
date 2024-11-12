@@ -23,7 +23,7 @@ public class WebSecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/api/expenses/**", "/api/statistics/**", "api/categories").permitAll()
+                        .requestMatchers("/api/expenses/**", "/api/statistics/**", "api/categories/**").permitAll()
                         .anyRequest().authenticated());
 
                 return httpSecurity.build();
