@@ -270,3 +270,15 @@ main {
     color: #FFF;
     background-color: #FF6500;
 }
+.editBtn {
+    color: goldenrod;
+    font-style: italic;
+    border: 1px solid #C5E898;
+    padding: 10px;
+    border-radius: 20%;
+    cursor: pointer;
+}
+.editBtn:hover {
+    color: #FFF;
+    background-color: goldenrod;
+}

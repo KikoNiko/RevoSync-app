@@ -13,7 +13,6 @@ import com.kbc.kibi_coins.util.InvalidCategoryException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,6 +45,15 @@ public class CategoryService {
         return categoryMapping.getCategoryMappings().getOrDefault(comment, null);
     }
 
+    @PostConstruct
+    public void initCategoryMappings() {
+        ccmRepository
+                .findAll()
+                .forEach(m -> {
+                    Category category = categoryRepository.findByName(CategoryEnum.valueOf(m.getCategoryName()));
+                    categoryMapping.getCategoryMappings().put(m.getComment(), category);
+                });
+    }
 
     public boolean addOrUpdateMapping(String comment, String categoryName) {
         Category category = categoryRepository.findByName(CategoryEnum.valueOf(categoryName.toUpperCase()));
@@ -67,16 +75,6 @@ public class CategoryService {
 
         categoryMapping.getCategoryMappings().put(comment, category);
         return true;
-    }
-
-    @PostConstruct
-    public void initCategoryMappings() {
-        ccmRepository
-                .findAll()
-                .forEach(m -> {
-                    Category category = categoryRepository.findByName(CategoryEnum.valueOf(m.getCategoryName()));
-                    categoryMapping.getCategoryMappings().put(m.getComment(), category);
-                });
     }
 
     public void categorizeCommentsInBatch() {

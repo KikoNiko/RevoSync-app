@@ -59,13 +59,4 @@ function createChart(elementId, data, type) {
 }
 
 
-// function updateChartType(chartElementId, newType) {
-//     const chartElement = document.getElementById(chartElementId);
-//     if (chartElement && chartElement.chartInstance) {
-//         const currentData = chartElement.chartInstance.data;
-//         chartElement.chartInstance.destroy();
-//         createChart(chartElementId, currentData, newType);
-//     }
-// }
-
 initCharts();

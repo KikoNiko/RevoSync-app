@@ -13,12 +13,17 @@ document.getElementById('searchByCategoryForm').addEventListener('submit', funct
     }
 });
 
+let pageIndex = 0;
+const rowsPerPage = 10;
 
 function displayExpenses(expenses) {
     const tbody = document.querySelector('#expenseTable tbody');
         tbody.innerHTML = '';
-        
-        expenses.forEach(expense => {
+
+        for (let i = pageIndex * rowsPerPage; i < (pageIndex * rowsPerPage) + rowsPerPage; i++) {
+            if (!expenses[i]) break;
+            const expense = expenses[i];
+            
             const row = document.createElement('tr');
             row.classList.add('innerList');
             row.innerHTML = `
@@ -27,13 +32,32 @@ function displayExpenses(expenses) {
                 <td data-label="Date">${expense.date}</td>
                 <td data-label="Comment">${expense.comment}</td>
                 <td data-label="Action">
+                    <button onclick="updateExpense(${expense.id})" class="editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
                     <button onclick="deleteExpense(${expense.id})" class="deleteBtn"><i class="fa-solid fa-trash"></i></button>
                 </td>
             `;
             tbody.appendChild(row);
-        });
+        }
+        loadPageNav(expenses);
 }
 
+function loadPageNav(expenses) {
+    const nav = document.getElementById('pagingNav');
+    nav.innerHTML = "";
+    for (let i = 0; i < (expenses.length / rowsPerPage); i++) {
+        const span = document.createElement('span');
+        span.innerHTML = i + 1;
+        span.addEventListener('click', (e) => {
+            pageIndex = e.target.innerHTML - 1;
+            displayExpenses(expenses);
+        });
+        if (i === pageIndex) {
+            //TODO: add more styling
+            span.style.fontSize = "2rem";
+        }
+        nav.append(span);
+    }
+}
 
 async function fetchExpenses() {
     try {
@@ -86,7 +110,7 @@ async function fetchExpensesByCategory(category) {
 }
 
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener('DOMContentLoaded', function() {
     async function fetchCategories() {
         try {
             const response = await fetch('http://localhost:8080/api/categories');
@@ -132,20 +156,20 @@ async function addExpense(event) {
 }
 
 
-document.getElementById("statementUploadForm").addEventListener("submit", function(e) {
+document.getElementById('statementUploadForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    const fileInput = document.getElementById("fileInput");
+    const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
-    const responseMessage = document.getElementById("responseMessage");
+    const responseMessage = document.getElementById('responseMessage');
 
     if (!file) {
-        alert("Please select a file first.");
+        alert('Please select a file first.');
         return;
     }
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append('file', file);
 
     fetch(apiUrl + '/upload', {
         method: "POST",
@@ -154,7 +178,7 @@ document.getElementById("statementUploadForm").addEventListener("submit", functi
     .then(response => response.text())
     .then(result => {
         if (result == -1) {
-            responseMessage.textContent = "Statement already uploaded!";
+            responseMessage.textContent = 'Statement already uploaded!';
         } else {
             responseMessage.textContent = `Added ${result} new expenses!`;
         }
@@ -162,13 +186,13 @@ document.getElementById("statementUploadForm").addEventListener("submit", functi
     })
     .catch(error => {
         console.error('Error:', error);
-        responseMessage.textContent = "Error uploading file";
+        responseMessage.textContent = 'Error uploading file';
     });
 });
 
 
 async function deleteExpense(id) {
-    const confirmDelete = confirm("Are you sure you want to delete this expense?");
+    const confirmDelete = confirm('Are you sure you want to delete this expense?');
     if (!confirmDelete) {
         return;
     }
@@ -184,3 +208,43 @@ async function deleteExpense(id) {
         alert('Failed to delete expense. Check the console for more details.');
     }
 }
+
+
+async function updateExpense(id, updatedData) {
+    try {
+        const response = await fetch(`${apiUrl}/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedData)
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to update expense: ${response.statusText}`);
+        }
+
+        const updatedExpense = await response.json();
+        console.log('Updated expense:', updatedExpense);
+        return updatedExpense;
+    } catch (error) {
+        console.error('Error updating expense:', error);
+    }
+}
+
+// TODO: Finish code for updating expense 
+
+document.querySelector('#updateForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const updatedData = {
+        fieldName1: formData.get('fieldName1'),
+        fieldName2: formData.get('fieldName2')
+    };
+
+    const objectId = formData.get('objectId');
+    await updateObject(objectId, updatedData);
+});
+
+
