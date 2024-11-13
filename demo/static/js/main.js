@@ -52,8 +52,7 @@ function loadPageNav(expenses) {
             displayExpenses(expenses);
         });
         if (i === pageIndex) {
-            //TODO: add more styling
-            span.style.fontSize = "2rem";
+            span.classList.toggle('clicked');
         }
         nav.append(span);
     }

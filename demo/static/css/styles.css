@@ -282,3 +282,51 @@ main {
     color: #FFF;
     background-color: goldenrod;
 }
+
+.pagingNavContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+}
+.pagingNav {
+    display: flex;
+    gap: 5px;
+}
+.pagingNav span {
+    width: 100%;
+    height: 100%;
+    padding: 5px 10px;
+    border: 1px solid #C5E898;
+    border-radius: 20%;
+    text-align: center;
+    cursor: pointer;
+}
+.pagingNav span:hover, .pagingNav span.clicked {
+    background-color: #C5E898;
+    color: #FF6500;
+}
+
+.footerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    background: #FFF;
+    margin-top: 30px;
+    height: var(--nav-height);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, 
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, 
+    rgba(0, 0, 0, 0.12) 0px 4px 6px, 
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, 
+    rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+.footerContainer p {
+    font-style: italic;
+    font-size: 15px;
+    opacity: 0.8;
+}
+.footerContainer p > span:not(:first-child) {
+    color: #0766AD;
+    margin-left: 10px;
+}
