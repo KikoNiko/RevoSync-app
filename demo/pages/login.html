@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+
+    <section class="nav">
+        <nav class="navContainer">
+            <ul>
+                <li>
+                    <a href="#" class="burger-menu"><i class="fa-solid fa-bars"></i></a>
+                    <div class="menu">
+                        <a href="/index.html">Home</a>
+                        <a href="/index.html#upload">Upload Statement</a>
+                        <a href="statistics.html">Statistics</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </section>
+
+    <main>
+        <section class="formSection">
+            <div class="container">
+                <form id="loginForm">
+                    <fieldset class="formContainer">
+                        <legend>Sign<i class="fa-solid fa-coins coins-icon"></i>In</legend>
+
+                        <label class="formLabel" for="email">Email or Username:</label>
+                        <input class="formInput" type="email" id="email" required>
+
+                        <label class="formLabel" for="password">Password:</label>
+                        <input class="formInput" type="password" id="password" required>
+
+                        <input class="btn btn-submit" type="submit" value="Sign In"></input>
+
+                        <p style="text-align: center; font-size: 15px;">Don't have an account? Sign Up 
+                            <a href="register.html" style="text-decoration: underline; color: goldenrod;">here</a>
+                        </p>
+                    </fieldset>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footerContainer">
+            <p>KiBi
+                <span><i class="fa-solid fa-coins coins-icon"></i></span>
+                Coins <span>2024</span>
+            </p>
+        </div>
+    </footer>
+
+    <script src="/static/js/nav.js"></script>
+    
+</body>
+</html>

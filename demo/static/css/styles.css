@@ -86,7 +86,7 @@ main {
     margin-top: 30px;
 }
 
-.addExpenseContainer {
+.formContainer {
     padding: 20px 30px;
     display: flex;
     flex-wrap: wrap;
@@ -95,7 +95,7 @@ main {
     border-radius: 30px;
     border: 1px solid #0766AD;
 }
-.addExpenseContainer > legend {
+.formContainer > legend {
     font-size: 30px;
     font-weight: 800;
     color: #0766AD;
