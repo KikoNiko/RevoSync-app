@@ -209,41 +209,42 @@ async function deleteExpense(id) {
 }
 
 
-async function updateExpense(id, updatedData) {
-    try {
-        const response = await fetch(`${apiUrl}/${id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedData)
-        });
+async function updateExpense() {
+    
+    // try {
+    //     const response = await fetch(`${apiUrl}/${id}`, {
+    //         method: 'PATCH',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(updatedData)
+    //     });
 
-        if (!response.ok) {
-            throw new Error(`Failed to update expense: ${response.statusText}`);
-        }
+    //     if (!response.ok) {
+    //         throw new Error(`Failed to update expense: ${response.statusText}`);
+    //     }
 
-        const updatedExpense = await response.json();
-        console.log('Updated expense:', updatedExpense);
-        return updatedExpense;
-    } catch (error) {
-        console.error('Error updating expense:', error);
-    }
+    //     const updatedExpense = await response.json();
+    //     console.log('Updated expense:', updatedExpense);
+    //     return updatedExpense;
+    // } catch (error) {
+    //     console.error('Error updating expense:', error);
+    // }
 }
 
 // TODO: Finish code for updating expense 
 
-document.querySelector('#updateForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
+// document.querySelector('#updateForm').addEventListener('submit', async (event) => {
+//     event.preventDefault();
     
-    const formData = new FormData(event.target);
-    const updatedData = {
-        fieldName1: formData.get('fieldName1'),
-        fieldName2: formData.get('fieldName2')
-    };
+//     const formData = new FormData(event.target);
+//     const updatedData = {
+//         fieldName1: formData.get('fieldName1'),
+//         fieldName2: formData.get('fieldName2')
+//     };
 
-    const objectId = formData.get('objectId');
-    await updateObject(objectId, updatedData);
-});
+//     const objectId = formData.get('objectId');
+//     await updateObject(objectId, updatedData);
+// });
 
 

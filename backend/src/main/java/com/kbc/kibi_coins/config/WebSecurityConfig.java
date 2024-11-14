@@ -1,4 +1,4 @@
-package com.kbc.kibi_coins.security;
+package com.kbc.kibi_coins.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
