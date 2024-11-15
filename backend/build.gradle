@@ -60,6 +60,10 @@ dependencies {
 
 }
 
+configurations.implementation {
+	exclude group: 'commons-logging', module: 'commons-logging'
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
