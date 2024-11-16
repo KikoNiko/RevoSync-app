@@ -32,7 +32,7 @@ function displayExpenses(expenses) {
                 <td data-label="Date">${expense.date}</td>
                 <td data-label="Comment">${expense.comment}</td>
                 <td data-label="Action">
-                    <button onclick="updateExpense(${expense.id})" class="editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button onclick="openEditForm(${expense.id})" class="editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
                     <button onclick="deleteExpense(${expense.id})" class="deleteBtn"><i class="fa-solid fa-trash"></i></button>
                 </td>
             `;
@@ -40,6 +40,54 @@ function displayExpenses(expenses) {
         }
         loadPageNav(expenses);
 }
+
+
+function openEditForm(expenseId) {
+    (async () => {
+        const expense = await getExpenseById(expenseId);
+        if (expense) {
+            console.log('Fetched expense:', expense);
+        } else {
+            console.log('Failed to fetch expense.');
+        }
+
+        editExpense(expense);
+    })();
+   
+}
+
+async function getExpenseById(expenseId) {
+    try {
+        const expense = fetchExpenseById(expenseId);
+        return expense;
+    } catch {
+        console.error('Failed to fetch the object:', error);
+        return null; // Return null or handle the error as needed
+    }
+}
+
+function editExpense(expense) {
+    const rowToEdit = document.querySelector('.innerList');
+    rowToEdit.innerHTML = 
+       `
+        <td data-label="Amount">
+        <input type="number" id="amount" name="amount" step="0.1" required>
+        </td>
+        <td data-label="Category">
+        <input type="text" id="category" name="category" value=${expense.category}>
+        </td>
+        <td data-label="Date">
+        <input type="date" id="date" name="date" required>
+        </td>
+        <td data-label="Comment">
+        <input type="text" id="comment" name="comment" placeholder="Comment...">
+        </td>
+        <td data-label="Action">
+        <button onclick="updateExpense(${expense.id})" class="editBtn"><i class="fa-solid fa-circle-check"></i></button>
+        </td>
+    `
+}
+
 
 function loadPageNav(expenses) {
     const nav = document.getElementById('pagingNav');
@@ -71,6 +119,20 @@ async function fetchExpenses() {
         console.error('Error fetching expenses:', error);
         alert('Failed to fetch expenses. Check the console for more details.');
     }
+}
+
+async function fetchExpenseById(expenseId) {
+    try {
+        const response = await fetch(apiUrl + `/${expenseId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const expense = await response.json();
+        return expense;
+    } catch (error) {
+        console.error('Error fetching expense:', error);
+        alert('Failed to fetch expense.');
+    } 
 }
 
 async function fetchExpensesByMonth(year, month) {
@@ -209,42 +271,30 @@ async function deleteExpense(id) {
 }
 
 
-async function updateExpense() {
+async function updateExpense(expenseId) {
     
-    // try {
-    //     const response = await fetch(`${apiUrl}/${id}`, {
-    //         method: 'PATCH',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(updatedData)
-    //     });
+    try {
+        const response = await fetch(`${apiUrl}/${expenseId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedData)
+        });
 
-    //     if (!response.ok) {
-    //         throw new Error(`Failed to update expense: ${response.statusText}`);
-    //     }
+        if (!response.ok) {
+            throw new Error(`Failed to update expense: ${response.statusText}`);
+        }
 
-    //     const updatedExpense = await response.json();
-    //     console.log('Updated expense:', updatedExpense);
-    //     return updatedExpense;
-    // } catch (error) {
-    //     console.error('Error updating expense:', error);
-    // }
+        const updatedExpense = await response.json();
+        console.log('Updated expense:', updatedExpense);
+        return updatedExpense;
+    } catch (error) {
+        console.error('Error updating expense:', error);
+    }
 }
 
 // TODO: Finish code for updating expense 
 
-// document.querySelector('#updateForm').addEventListener('submit', async (event) => {
-//     event.preventDefault();
-    
-//     const formData = new FormData(event.target);
-//     const updatedData = {
-//         fieldName1: formData.get('fieldName1'),
-//         fieldName2: formData.get('fieldName2')
-//     };
-
-//     const objectId = formData.get('objectId');
-//     await updateObject(objectId, updatedData);
-// });
 
 

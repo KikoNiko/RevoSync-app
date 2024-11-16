@@ -94,6 +94,7 @@ main {
     gap: 15px;
     border-radius: 30px;
     border: 1px solid #0766AD;
+    position: relative;
 }
 .formContainer > legend {
     font-size: 30px;

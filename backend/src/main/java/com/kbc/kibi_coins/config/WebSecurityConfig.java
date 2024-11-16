@@ -32,7 +32,7 @@ public class WebSecurityConfig {
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated());
 
                 return httpSecurity.build();
