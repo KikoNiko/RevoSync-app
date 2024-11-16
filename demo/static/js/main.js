@@ -83,9 +83,42 @@ function editExpense(expense) {
         <input type="text" id="comment" name="comment" placeholder="Comment...">
         </td>
         <td data-label="Action">
-        <button onclick="updateExpense(${expense.id})" class="editBtn"><i class="fa-solid fa-circle-check"></i></button>
+        <button id='saveChangesBtn' class="editBtn"><i class="fa-solid fa-circle-check"></i></button>
         </td>
-    `
+    `;
+
+    const updatedData = {
+        amount : document.getElementById('amount').value,
+        category : document.getElementById('category').value,
+        date : document.getElementById('date').value,
+        comment : document.getElementById('comment').value
+    }
+
+    const saveChangesBtn = document.getElementById('saveChangesBtn').onclick=updateExpense(expense.id);
+    
+    async function updateExpense(expenseId) {
+    
+        try {
+            const response = await fetch(`${apiUrl}/${expenseId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedData)
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Failed to update expense: ${response.statusText}`);
+            }
+    
+            const updatedExpense = await response.json();
+            console.log('Updated expense:', updatedExpense);
+            return updatedExpense;
+        } catch (error) {
+            console.error('Error updating expense:', error);
+        }
+    }
+
 }
 
 
@@ -269,32 +302,6 @@ async function deleteExpense(id) {
         alert('Failed to delete expense. Check the console for more details.');
     }
 }
-
-
-async function updateExpense(expenseId) {
-    
-    try {
-        const response = await fetch(`${apiUrl}/${expenseId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedData)
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to update expense: ${response.statusText}`);
-        }
-
-        const updatedExpense = await response.json();
-        console.log('Updated expense:', updatedExpense);
-        return updatedExpense;
-    } catch (error) {
-        console.error('Error updating expense:', error);
-    }
-}
-
-// TODO: Finish code for updating expense 
 
 
 
