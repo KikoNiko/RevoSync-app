@@ -35,6 +35,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated());
 
+                //TODO: app security to be configured securing endpoints
                 return httpSecurity.build();
     }
 }
