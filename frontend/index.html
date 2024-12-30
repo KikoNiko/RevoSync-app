@@ -3,65 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Demo Kibi Coins</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="static/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
 <body>
 
-    <div class="container">
-        <h1>Expense Tracker</h1>
+    <section class="nav">
+        <nav class="navContainer">
+            <ul>
+                <li>
+                    <a href="#" class="burger-menu"><i class="fa-solid fa-bars"></i></a>
+                    <div class="menu">
+                        <a href="#">Home</a>
+                        <a href="#upload">Upload Statement</a>
+                        <a href="pages/statistics.html">Statistics</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </section>
 
-        <h2>Add Expense</h2>
-        <form id="expenseForm">
-            <input type="number" step="0.01" id="amount" placeholder="Amount" required>
-            <select id="category-select" required>
-                <option value="">Select a category</option>
-            </select>
-            <input type="date" id="date" required>
-            <input type="text" id="comment" placeholder="Comment">
-            <button type="submit">Add Expense</button>
-        </form>
+    <main>
+        <section class="formSection">
+            <div class="container">
+                <form id="expenseForm">
+                    <fieldset class="formContainer addExpenseContainer">
+                        <legend>Add a new expense</legend>
 
-        <div class="container-flex">
+                        <label class="formLabel" for="amount">Enter amount in lv. :</label>
+                        <input class="formInput" type="number" id="amount" name="amount" step="0.1" required>
+                        
+                        <label class="formLabel" for="category-select">Select cateogory :</label>
+                        <select class="formInput" id="category-select" name="category" required>
+                            <option class="formInput" value=""></option>
+                        </select>
 
-            <div class="container-search">
-                <button id="fetchExpensesBtn">Fetch All Expenses</button>
-    
-                <form id="searchByCategoryForm">
-                    <input type="text" id="searchCategory" placeholder="Search by Category" required>
-                    <button type="submit">Search</button>
+                        <label class="formLabel" for="date">Enter the date of the expense :</label>
+                        <input class="formInput" type="date" id="date" name="date" required>
+
+                        <label class="formLabel" for="comment">Write a comment here :</label>
+                        <input class="formInput" type="text" id="comment" name="comment" placeholder="Comment...">
+
+                        <input class="btn btn-submit" type="submit" value="Add Expense"></input>
+                    </fieldset>
                 </form>
             </div>
+        </section>
 
-            <fieldset class="statement-upload">
-                <legend>Upload Revolut Statement (.csv)</legend>
-                
-                <div class="file-upload">
-                    <form id="statementUploadForm">
-                        <input type="file" name="file" id="fileInput"
-                        accept=".csv">
-
-                        <input type="submit" value="Upload">
-                    </form>
-                </div>
-                <p id="responseMessage"></p>
-            </fieldset>
-
-            
-    
-            <div class="container-statistics">
-                <button id="fetchSpentThisMonth">Spent This Month</button>
-                <p id="expense-result"></p>
-
-                <button id="fetchSpentByYear">Spent This Year</button>
-                <p id="expense-result-year"></p>
+        <section class="uploadSection" id="upload">
+            <div class="container uploadFileContainer">
+                <form class="fileUploadForm" id="statementUploadForm">
+                    <h2 class="uploadTitle">Upload Revolut Statement</h2>
+                    <div class="inputGroup">
+                        <div class="group1">
+                            <label for="fileInput" class="chooseFile">Choose file</label>
+                            <input class="formInput fileInput" type="file"
+                            name="fileInput"
+                            id="fileInput" 
+                            accept=".csv">
+                        </div>
+                        <div class="group2">
+                            <label class="btn-submit" for="uploadBtn"><i class="fa-solid fa-upload"></i></label>
+                            <input id="uploadBtn" type="submit" value="">
+                        </div>
+                    </div>
+                    <p id="responseMessage"></p>
+                </form>
             </div>
-    
-            <div class="display-expenses">
-                <h2>Expenses</h2>
-                <table id="expenseTable">
+        </section>
+
+        <section class="showExpensesSection" id="showExpenses">
+            <div class="container showExpensesContainer">
+                <section class="showExpensesNav">
+                    <h2 class="myExpenses-title">My Expenses <i class="fa-solid fa-coins coins-icon"></i></h2>
+                    <ul>
+                        <li>    
+                            <a id="fetchThisMonthBtn">This month</a>
+                            <a id="fetchAllBtn">All time expenses</a>
+                            <form id="searchByCategoryForm">
+                                <input class="searchCategoryInput" type="text" id="searchCategory" placeholder=" Search by Category" required>
+                                <button class="btn searchCategoryBtn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </form>   
+                        </li>
+                    </ul>
+                </section>
+
+                <table id="expenseTable" class="expenseTable">
                     <thead>
-                        <tr>
+                        <tr class="headerList">
                             <th>Amount</th>
                             <th>Category</th>
                             <th>Date</th>
@@ -69,13 +100,27 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody class="expensesContainer"></tbody>
                 </table>
-            </div>
-            
-        </div>
 
-    </div>
-    <script src="app.js"></script>
+                <div class="pagingNavContainer">
+                    <nav class="pagingNav" id="pagingNav"></nav>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footerContainer">
+            <p>KiBi
+                <span><i class="fa-solid fa-coins coins-icon"></i></span>
+                Coins <span>2024</span>
+            </p>
+        </div>
+    </footer>
+    
 </body>
+
+<script src="static/js/nav.js"></script>
+<script src="static/js/main.js"></script>
 </html>
