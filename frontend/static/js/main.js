@@ -32,7 +32,7 @@ function displayExpenses(expenses) {
                 <td data-label="Date">${expense.date}</td>
                 <td data-label="Comment">${expense.comment}</td>
                 <td data-label="Action">
-                    <button onclick="openEditForm(${expense.id})" class="editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="editBtn"><i class="fa-solid fa-pen-to-square"></i></button>
                     <button onclick="deleteExpense(${expense.id})" class="deleteBtn"><i class="fa-solid fa-trash"></i></button>
                 </td>
             `;
@@ -42,20 +42,6 @@ function displayExpenses(expenses) {
 }
 
 
-function openEditForm(expenseId) {
-    (async () => {
-        const expense = await getExpenseById(expenseId);
-        if (expense) {
-            console.log('Fetched expense:', expense);
-        } else {
-            console.log('Failed to fetch expense.');
-        }
-
-        editExpense(expense);
-    })();
-   
-}
-
 async function getExpenseById(expenseId) {
     try {
         const expense = fetchExpenseById(expenseId);
@@ -64,61 +50,6 @@ async function getExpenseById(expenseId) {
         console.error('Failed to fetch the object:', error);
         return null; // Return null or handle the error as needed
     }
-}
-
-function editExpense(expense) {
-    const rowToEdit = document.querySelector('.innerList');
-    rowToEdit.innerHTML = 
-       `
-        <td data-label="Amount">
-        <input type="number" id="amount" name="amount" step="0.1" required>
-        </td>
-        <td data-label="Category">
-        <input type="text" id="category" name="category" value=${expense.category}>
-        </td>
-        <td data-label="Date">
-        <input type="date" id="date" name="date" required>
-        </td>
-        <td data-label="Comment">
-        <input type="text" id="comment" name="comment" placeholder="Comment...">
-        </td>
-        <td data-label="Action">
-        <button id='saveChangesBtn' class="editBtn"><i class="fa-solid fa-circle-check"></i></button>
-        </td>
-    `;
-
-    const updatedData = {
-        amount : document.getElementById('amount').value,
-        category : document.getElementById('category').value,
-        date : document.getElementById('date').value,
-        comment : document.getElementById('comment').value
-    }
-
-    const saveChangesBtn = document.getElementById('saveChangesBtn').onclick=updateExpense(expense.id);
-    
-    async function updateExpense(expenseId) {
-    
-        try {
-            const response = await fetch(`${apiUrl}/${expenseId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updatedData)
-            });
-    
-            if (!response.ok) {
-                throw new Error(`Failed to update expense: ${response.statusText}`);
-            }
-    
-            const updatedExpense = await response.json();
-            console.log('Updated expense:', updatedExpense);
-            return updatedExpense;
-        } catch (error) {
-            console.error('Error updating expense:', error);
-        }
-    }
-
 }
 
 
