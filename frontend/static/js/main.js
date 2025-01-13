@@ -1,7 +1,8 @@
 const apiUrl = 'http://localhost:8080/api/expenses';
 const statisticsUrl = 'http://localhost:8080/api/statistics';
 
-document.getElementById('expenseForm').addEventListener('submit', addExpense);
+const expenseForm = document.getElementById('expenseForm');
+expenseForm.addEventListener('submit', addExpense);
 document.getElementById('fetchAllBtn').addEventListener('click', fetchExpenses);
 document.getElementById('fetchThisMonthBtn').addEventListener('click', fetchExpensesThisMonth);
 document.getElementById('searchByCategoryForm').addEventListener('submit', function(e) {
@@ -135,29 +136,6 @@ async function fetchExpensesByCategory(category) {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    async function fetchCategories() {
-        try {
-            const response = await fetch('http://localhost:8080/api/categories');
-            const categories = await response.json();
-
-            const categorySelect = document.getElementById('category-select');
-            categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category.id;
-                option.text = category.name; 
-                categorySelect.appendChild(option);
-            });
-        } catch (error) {
-            console.error('Error fetching categories:', error);
-        }
-    }
-
-    // Fetch categories when the page is loaded
-    fetchCategories();
-});
-
-
 async function addExpense(event) {
     event.preventDefault();
     const categorySelect = document.getElementById('category-select');
@@ -235,4 +213,25 @@ async function deleteExpense(id) {
 }
 
 
+document.addEventListener('DOMContentLoaded', function() {
+    async function fetchCategories() {
+        try {
+            const response = await fetch('http://localhost:8080/api/categories');
+            const categories = await response.json();
+
+            const categorySelect = document.getElementById('category-select');
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.text = category.name; 
+                categorySelect.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
+    }
+
+    // Fetch categories when the page is loaded
+    fetchCategories();
+});
 
