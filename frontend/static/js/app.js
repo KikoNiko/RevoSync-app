@@ -1,5 +1,4 @@
 const apiUrl = 'http://localhost:8080/api/expenses';
-const statisticsUrl = 'http://localhost:8080/api/statistics';
 
 const expenseForm = document.getElementById('expenseForm');
 expenseForm.addEventListener('submit', addExpense);
@@ -7,7 +6,6 @@ document.getElementById('fetchAllBtn').addEventListener('click', fetchExpenses);
 document.getElementById('fetchThisMonthBtn').addEventListener('click', fetchExpensesThisMonth);
 document.getElementById('searchByCategoryForm').addEventListener('submit', function (e) {
     e.preventDefault();
-
     const category = document.getElementById('searchCategory').value.trim();
     if (category) {
         fetchExpensesByCategory(category);
@@ -16,7 +14,6 @@ document.getElementById('searchByCategoryForm').addEventListener('submit', funct
 
 let pageIndex = 0;
 const rowsPerPage = 10;
-
 
 function displayExpenses(expenses) {
 
@@ -46,6 +43,50 @@ function displayExpenses(expenses) {
     }
     loadPageNav(expenses);
 }
+
+
+function loadPageNav(expenses) {
+    const nav = document.getElementById('pagingNav');
+    nav.innerHTML = "";
+    for (let i = 0; i < (expenses.length / rowsPerPage); i++) {
+        const span = document.createElement('span');
+        span.innerHTML = i + 1;
+        span.addEventListener('click', (e) => {
+            pageIndex = e.target.innerHTML - 1;
+            displayExpenses(expenses);
+        });
+        if (i === pageIndex) {
+            span.classList.toggle('clicked');
+        }
+        nav.append(span);
+    }
+}
+
+
+function fetchExpensesThisMonth() {
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+    fetchExpensesByMonth(currentYear, currentMonth);
+}
+
+
+document.getElementById('statementUploadForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+    const responseMessage = document.getElementById('responseMessage');
+
+    if (!file) {
+        alert('Please select a file first.');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    uploadStatement(formData, responseMessage);
+});
 
 
 function enableInlineEditing(row, expense) {
@@ -179,34 +220,6 @@ function enableInlineEditing(row, expense) {
 }
 
 
-async function getExpenseById(expenseId) {
-    try {
-        const expense = fetchExpenseById(expenseId);
-        return expense;
-    } catch {
-        console.error('Failed to fetch the object:', error);
-        return null; // Return null or handle the error as needed
-    }
-}
-
-
-function loadPageNav(expenses) {
-    const nav = document.getElementById('pagingNav');
-    nav.innerHTML = "";
-    for (let i = 0; i < (expenses.length / rowsPerPage); i++) {
-        const span = document.createElement('span');
-        span.innerHTML = i + 1;
-        span.addEventListener('click', (e) => {
-            pageIndex = e.target.innerHTML - 1;
-            displayExpenses(expenses);
-        });
-        if (i === pageIndex) {
-            span.classList.toggle('clicked');
-        }
-        nav.append(span);
-    }
-}
-
 async function fetchExpenses() {
     try {
         const response = await fetch(apiUrl + '/all');
@@ -222,6 +235,7 @@ async function fetchExpenses() {
     }
 }
 
+
 async function fetchExpenseById(expenseId) {
     try {
         const response = await fetch(apiUrl + `/${expenseId}`);
@@ -235,6 +249,7 @@ async function fetchExpenseById(expenseId) {
         alert('Failed to fetch expense.');
     }
 }
+
 
 async function fetchExpensesByMonth(year, month) {
     try {
@@ -251,11 +266,6 @@ async function fetchExpensesByMonth(year, month) {
     }
 }
 
-function fetchExpensesThisMonth() {
-    const currentMonth = new Date().getMonth() + 1;
-    const currentYear = new Date().getFullYear();
-    fetchExpensesByMonth(currentYear, currentMonth);
-}
 
 async function fetchExpensesByCategory(category) {
     try {
@@ -295,24 +305,10 @@ async function addExpense(event) {
 }
 
 
-document.getElementById('statementUploadForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0];
-    const responseMessage = document.getElementById('responseMessage');
-
-    if (!file) {
-        alert('Please select a file first.');
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-
+async function uploadStatement(data, responseMessage) {
     fetch(apiUrl + '/upload', {
         method: "POST",
-        body: formData
+        body: data
     })
         .then(response => response.text())
         .then(result => {
@@ -327,7 +323,7 @@ document.getElementById('statementUploadForm').addEventListener('submit', functi
             console.error('Error:', error);
             responseMessage.textContent = 'Error uploading file';
         });
-});
+}
 
 
 async function updateExpense(expense) {
@@ -350,7 +346,6 @@ async function updateExpense(expense) {
         return false;
     }
 }
-
 
 
 async function deleteExpense(id) {
@@ -389,8 +384,6 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error fetching categories:', error);
         }
     }
-
     // Fetch categories when the page is loaded
     fetchCategories();
 });
-

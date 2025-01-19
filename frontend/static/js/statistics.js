@@ -58,5 +58,4 @@ function createChart(elementId, data, type) {
     chartElement.chartInstance = chartInstance;
 }
 
-
 initCharts();
