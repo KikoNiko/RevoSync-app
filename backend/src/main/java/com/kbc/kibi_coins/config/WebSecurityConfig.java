@@ -14,11 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class WebSecurityConfig {
-
-    private final JwtAuthenticationFilter authenticationFilter;
-    private final AuthenticationProvider authenticationProvider;
 
     @Bean
     public SecurityFilterChain appSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -28,14 +24,11 @@ public class WebSecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated());
 
-                //TODO: app security to be configured securing endpoints
                 return httpSecurity.build();
     }
 }
