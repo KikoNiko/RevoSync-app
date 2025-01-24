@@ -129,7 +129,7 @@ public class ExpenseService {
         }
         if (!incompleteExpense.getCategory().isEmpty()) {
             String categoryString = incompleteExpense.getCategory();
-            if (categoryRepository.findByName(CategoryEnum.valueOf(categoryString)) == null) {
+            if (isCategoryInvalid(categoryString)) {
                 throw new InvalidCategoryException(String.format(INVALID_CATEGORY, categoryString));
             }
         }
