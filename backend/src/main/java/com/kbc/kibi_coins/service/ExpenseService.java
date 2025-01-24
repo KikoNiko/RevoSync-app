@@ -39,7 +39,7 @@ public class ExpenseService {
     private final CategoryService categoryService;
 
     public ExpenseResponse addExpense(ExpenseRequest expenseRequest) {
-        if (isCategoryInvalid(expenseRequest.getCategory())) {
+        if (categoryService.isCategoryInvalid(expenseRequest.getCategory())) {
             throw new InvalidCategoryException(String.format(INVALID_CATEGORY, expenseRequest.getCategory()));
         }
 
@@ -85,26 +85,8 @@ public class ExpenseService {
         expenseRepository.delete(expense);
     }
 
-    private ExpenseResponse mapToResponse(Expense exp) {
-        if (exp.getCategory() == null) {
-            return ExpenseResponse.builder()
-                    .id(exp.getId())
-                    .amount(exp.getAmount())
-                    .date(exp.getDate())
-                    .comment(exp.getComment())
-                    .build();
-        }
-        return ExpenseResponse.builder()
-                .id(exp.getId())
-                .amount(exp.getAmount())
-                .category(exp.getCategory().getName().toString())
-                .date(exp.getDate())
-                .comment(exp.getComment())
-                .build();
-    }
-
     public List<ExpenseResponse> getAllByCategory(String category) {
-        if (isCategoryInvalid(category)) {
+        if (categoryService.isCategoryInvalid(category)) {
             throw new InvalidCategoryException(String.format(INVALID_CATEGORY, category));
         }
         return expenseRepository
@@ -115,13 +97,6 @@ public class ExpenseService {
                 .collect(Collectors.toList());
     }
 
-    static boolean isCategoryInvalid(String categoryName) {
-        return !Arrays.stream(CategoryEnum.values())
-                .map(Enum::toString)
-                .toList()
-                .contains(categoryName.toUpperCase());
-    }
-
     public ExpenseResponse updateExpenseByFields(Long id, ExpenseRequest incompleteExpense) {
         Optional<Expense> byId = expenseRepository.findById(id);
         if (byId.isEmpty()) {
@@ -129,7 +104,7 @@ public class ExpenseService {
         }
         if (!incompleteExpense.getCategory().isEmpty()) {
             String categoryString = incompleteExpense.getCategory();
-            if (isCategoryInvalid(categoryString)) {
+            if (categoryService.isCategoryInvalid(categoryString)) {
                 throw new InvalidCategoryException(String.format(INVALID_CATEGORY, categoryString));
             }
         }
@@ -143,15 +118,6 @@ public class ExpenseService {
             log.error("Oops! Something went wrong...", e);
         }
         return mapToResponse(exp);
-    }
-
-    private Expense mapToExpense(ExpenseRequest expenseRequest) {
-        return Expense.builder()
-                .amount(expenseRequest.getAmount())
-                .category(categoryRepository.findByName(CategoryEnum.valueOf(expenseRequest.getCategory())))
-                .date(expenseRequest.getDate())
-                .comment(expenseRequest.getComment())
-                .build();
     }
 
     public List<ExpenseResponse> getAllByYearAndMonth(int year, short month) {
@@ -234,5 +200,32 @@ public class ExpenseService {
             count ++;
         }
         return count;
+    }
+
+    private Expense mapToExpense(ExpenseRequest expenseRequest) {
+        return Expense.builder()
+                .amount(expenseRequest.getAmount())
+                .category(categoryRepository.findByName(CategoryEnum.valueOf(expenseRequest.getCategory())))
+                .date(expenseRequest.getDate())
+                .comment(expenseRequest.getComment())
+                .build();
+    }
+
+    private ExpenseResponse mapToResponse(Expense exp) {
+        if (exp.getCategory() == null) {
+            return ExpenseResponse.builder()
+                    .id(exp.getId())
+                    .amount(exp.getAmount())
+                    .date(exp.getDate())
+                    .comment(exp.getComment())
+                    .build();
+        }
+        return ExpenseResponse.builder()
+                .id(exp.getId())
+                .amount(exp.getAmount())
+                .category(exp.getCategory().getName().toString())
+                .date(exp.getDate())
+                .comment(exp.getComment())
+                .build();
     }
 }

@@ -25,6 +25,7 @@ public class StatisticsService {
 
     private final ExpenseRepository expenseRepository;
     private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
     public BigDecimal spentByMonth(int year, int month) {
         LocalDate startDate = LocalDate.of(year, month, 1);
@@ -37,7 +38,7 @@ public class StatisticsService {
     }
 
     public BigDecimal spentByCategory(String category) {
-        if (ExpenseService.isCategoryInvalid(category)) {
+        if (categoryService.isCategoryInvalid(category)) {
             throw new InvalidCategoryException(String.format(INVALID_CATEGORY, category));
         }
 

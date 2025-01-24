@@ -3,7 +3,6 @@ package com.kbc.kibi_coins.repository;
 import com.kbc.kibi_coins.model.Category;
 import com.kbc.kibi_coins.model.CategoryEnum;
 import com.kbc.kibi_coins.model.Expense;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @Testcontainers
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class ExpenseRepositoryTest {
+class ExpenseRepositoryTests {
     @Container
     @ServiceConnection
     static PostgreSQLContainer<?> postgreSQLContainer

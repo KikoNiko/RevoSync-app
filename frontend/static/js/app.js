@@ -282,8 +282,8 @@ async function fetchExpensesByCategory(category) {
 }
 
 
-async function addExpense(event) {
-    event.preventDefault();
+async function addExpense(e) {
+    e.preventDefault();
     const categorySelect = document.getElementById('category-select');
     const expense = {
         amount: parseFloat(document.getElementById('amount').value),

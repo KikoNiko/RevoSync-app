@@ -14,6 +14,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,13 @@ public class CategoryService {
         categoryDto.setId(category.getCategoryId());
         categoryDto.setName(category.getName().name());
         return categoryDto;
+    }
+
+    public boolean isCategoryInvalid(String categoryName) {
+        return !Arrays.stream(CategoryEnum.values())
+                .map(Enum::toString)
+                .toList()
+                .contains(categoryName.toUpperCase());
     }
 
     public Category getCategoryFromDescription(String comment) {
