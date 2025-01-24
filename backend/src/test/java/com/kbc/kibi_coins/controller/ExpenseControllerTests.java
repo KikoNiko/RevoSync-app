@@ -26,6 +26,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = ExpenseController.class)
@@ -38,7 +39,6 @@ public class ExpenseControllerTests {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private Expense testExpense;
     private ExpenseRequest expenseRequest;
 
     private ExpenseResponse expenseResponse;
@@ -47,7 +47,7 @@ public class ExpenseControllerTests {
     void setUp() {
         Category testCategory = new Category(CategoryEnum.EDUCATION);
 
-        testExpense = Expense.builder()
+        Expense testExpense = Expense.builder()
                 .id(1L)
                 .amount(BigDecimal.TEN)
                 .category(testCategory)
@@ -75,13 +75,12 @@ public class ExpenseControllerTests {
     void addExpense_ShouldReturnCreated() throws Exception {
         when(expenseService.addExpense(expenseRequest)).thenReturn(expenseResponse);
 
-        MvcResult result = mockMvc.perform(post("/api/expenses/add")
-                .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/api/expenses")
+                        .contentType(MediaType.APPLICATION_JSON)
                         .with(csrf())
-                .content(objectMapper.writeValueAsString(expenseRequest)))
+                        .content(objectMapper.writeValueAsString(expenseRequest)))
                 .andExpect(status().isCreated())
                 .andReturn();
-
     }
 
     @Test
