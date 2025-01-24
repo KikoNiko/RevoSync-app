@@ -15,7 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,7 +25,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = ExpenseController.class)
@@ -86,7 +84,7 @@ public class ExpenseControllerTests {
     @Test
     void getExpenseById_ShouldReturn() throws Exception {
         when(expenseService.getExpenseById(1L)).thenReturn(expenseResponse);
-        MvcResult mvcResult = mockMvc.perform(get("/api/expenses/1"))
+        mockMvc.perform(get("/api/expenses/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
