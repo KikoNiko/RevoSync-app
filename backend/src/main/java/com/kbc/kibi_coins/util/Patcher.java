@@ -1,6 +1,7 @@
 package com.kbc.kibi_coins.util;
 
 import com.kbc.kibi_coins.model.Expense;
+import com.kbc.kibi_coins.model.dto.ExpenseRequest;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;

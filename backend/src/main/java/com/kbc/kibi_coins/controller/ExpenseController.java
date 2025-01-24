@@ -51,7 +51,7 @@ public class ExpenseController {
 
     @PatchMapping("/{id}")
     public ExpenseResponse updateExpense(@PathVariable Long id,
-                                         @Valid @RequestBody Expense incompleteExpense) {
+                                         @Valid @RequestBody ExpenseRequest incompleteExpense) {
         return expenseService.updateExpenseByFields(id, incompleteExpense);
     }
 

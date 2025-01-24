@@ -122,20 +122,36 @@ public class ExpenseService {
                 .contains(categoryName.toUpperCase());
     }
 
-    public ExpenseResponse updateExpenseByFields(Long id, Expense incompleteExpense) {
+    public ExpenseResponse updateExpenseByFields(Long id, ExpenseRequest incompleteExpense) {
         Optional<Expense> byId = expenseRepository.findById(id);
         if (byId.isEmpty()) {
             throw new EntityNotFoundException();
         }
+        if (!incompleteExpense.getCategory().isEmpty()) {
+            String categoryString = incompleteExpense.getCategory();
+            if (categoryRepository.findByName(CategoryEnum.valueOf(categoryString)) == null) {
+                throw new InvalidCategoryException(String.format(INVALID_CATEGORY, categoryString));
+            }
+        }
+        Expense toUpdate = mapToExpense(incompleteExpense);
         Expense exp = byId.get();
         try {
-            Patcher.expensePatcher(exp, incompleteExpense);
+            Patcher.expensePatcher(exp, toUpdate);
             expenseRepository.save(exp);
             log.info("Expense data updated");
         }catch (Exception e){
             log.error("Oops! Something went wrong...", e);
         }
         return mapToResponse(exp);
+    }
+
+    private Expense mapToExpense(ExpenseRequest expenseRequest) {
+        return Expense.builder()
+                .amount(expenseRequest.getAmount())
+                .category(categoryRepository.findByName(CategoryEnum.valueOf(expenseRequest.getCategory())))
+                .date(expenseRequest.getDate())
+                .comment(expenseRequest.getComment())
+                .build();
     }
 
     public List<ExpenseResponse> getAllByYearAndMonth(int year, short month) {
