@@ -2,7 +2,6 @@ package com.kbc.kibi_coins.repository;
 
 import com.kbc.kibi_coins.model.CategoryEnum;
 import com.kbc.kibi_coins.model.Expense;
-import com.kbc.kibi_coins.model.dto.SpentByMonthDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -211,7 +211,7 @@ public class ExpenseService {
                 .build();
     }
 
-    private ExpenseResponse mapToResponse(Expense exp) {
+    public ExpenseResponse mapToResponse(Expense exp) {
         if (exp.getCategory() == null) {
             return ExpenseResponse.builder()
                     .id(exp.getId())

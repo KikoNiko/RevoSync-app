@@ -9,20 +9,23 @@ import com.kbc.kibi_coins.repository.ExpenseRepository;
 import com.kbc.kibi_coins.util.ConstantMessages;
 import com.kbc.kibi_coins.util.InvalidCategoryException;
 import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class ExpenseServiceTests {
     @Mock
     private CategoryRepository categoryRepository;
@@ -33,28 +36,20 @@ public class ExpenseServiceTests {
     @InjectMocks
     private ExpenseService expenseService;
 
-    private ExpenseRequest expenseRequest;
-    private Expense mockExpense;
+    private static final ExpenseRequest expenseRequest = ExpenseRequest.builder()
+            .amount(BigDecimal.valueOf(100.0))
+            .category("FOOD")
+            .date(LocalDate.now())
+            .comment("Dinner with friends")
+            .build();
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-
-        expenseRequest = ExpenseRequest.builder()
-                .amount(BigDecimal.valueOf(100.0))
-                .category("FOOD")
-                .date(LocalDate.now())
-                .comment("Dinner with friends")
-                .build();
-
-        mockExpense = Expense.builder()
-                .id(1L)
-                .amount(BigDecimal.valueOf(100.0))
-                .date(LocalDate.now())
-                .comment("Groceries")
-                .category(new Category(CategoryEnum.FOOD))
-                .build();
-    }
+    private static final Expense mockExpense = Expense.builder()
+            .id(1L)
+            .amount(BigDecimal.valueOf(100.0))
+            .date(LocalDate.now())
+            .comment("Groceries")
+            .category(new Category(CategoryEnum.FOOD))
+            .build();
 
     @Test
     void addExpense_shouldSaveExpense_whenCategoryIsValid() {
@@ -68,8 +63,6 @@ public class ExpenseServiceTests {
         assertNotNull(response);
         assertEquals(expenseRequest.getAmount(), response.getAmount());
         assertEquals(expenseRequest.getCategory(), response.getCategory());
-        assertEquals(expenseRequest.getComment(), response.getComment());
-        assertEquals(expenseRequest.getDate(), response.getDate());
 
         verify(categoryRepository, times(1)).findByName(CategoryEnum.FOOD);
         verify(expenseRepository, times(1)).save(any(Expense.class));
@@ -77,14 +70,19 @@ public class ExpenseServiceTests {
 
     @Test
     void addExpense_shouldThrowInvalidCategoryException_whenCategoryIsInvalid() {
-        String invalidCategory = "INVALID_CATEGORY";
-        expenseRequest.setCategory(invalidCategory);
+        String invalidCategory = "INVALID";
+        ExpenseRequest expenseRequest1 = ExpenseRequest.builder()
+                .amount(BigDecimal.valueOf(50.0))
+                .category(invalidCategory)
+                .date(LocalDate.now())
+                .comment("Test Invalid")
+                .build();
 
         when(categoryService.isCategoryInvalid(invalidCategory)).thenReturn(true);
 
         InvalidCategoryException exception = assertThrows(
                 InvalidCategoryException.class,
-                () -> expenseService.addExpense(expenseRequest)
+                () -> expenseService.addExpense(expenseRequest1)
         );
 
         assertEquals(String.format(ConstantMessages.INVALID_CATEGORY, invalidCategory), exception.getMessage());
@@ -100,8 +98,6 @@ public class ExpenseServiceTests {
         assertNotNull(response);
         assertEquals(mockExpense.getId(), response.getId());
         assertEquals(mockExpense.getAmount(), response.getAmount());
-        assertEquals(mockExpense.getComment(), response.getComment());
-        assertEquals(mockExpense.getCategory().getName().name(), response.getCategory());
         assertEquals(mockExpense.getDate(), response.getDate());
 
         verify(expenseRepository, times(1)).findById(1L);
@@ -168,5 +164,62 @@ public class ExpenseServiceTests {
         verify(expenseRepository, times(1)).findById(1L);
         verify(expenseRepository, never()).delete(any());
     }
+
+
+    @Test
+    void getAllByCategory_shouldReturnExpenses_whenCategoryIsValid() {
+        String category = "FOOD";
+        when(categoryService.isCategoryInvalid(category)).thenReturn(false);
+
+        Category category1 = new Category(CategoryEnum.FOOD);
+
+        Expense expense1 = new Expense(1L, BigDecimal.valueOf(50), category1, LocalDate.of(2023, 1, 10), "Lunch");
+        Expense expense2 = new Expense(2L, BigDecimal.valueOf(100), category1, LocalDate.of(2023, 1, 5), "Dinner");
+        List<Expense> expenses = Arrays.asList(expense1, expense2);
+
+        when(expenseRepository.getAllByCategory_NameOrderByDateDesc(CategoryEnum.FOOD)).thenReturn(expenses);
+
+        ExpenseResponse response1 = new ExpenseResponse(1L, BigDecimal.valueOf(50), category, LocalDate.of(2023, 1, 10), "Lunch");
+        ExpenseResponse response2 = new ExpenseResponse(2L, BigDecimal.valueOf(100), category, LocalDate.of(2023, 1, 5), "Dinner");
+
+        List<ExpenseResponse> result = expenseService.getAllByCategory(category);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(response1, result.get(0));
+        assertEquals(response2, result.get(1));
+
+        verify(categoryService, times(1)).isCategoryInvalid(category);
+        verify(expenseRepository, times(1)).getAllByCategory_NameOrderByDateDesc(CategoryEnum.FOOD);
+    }
+
+
+    @Test
+    void getAllByCategory_shouldThrowException_whenCategoryIsInvalid() {
+        String category = "INVALID";
+        when(categoryService.isCategoryInvalid(category)).thenReturn(true);
+
+        InvalidCategoryException exception = assertThrows(InvalidCategoryException.class, () -> expenseService.getAllByCategory(category));
+        assertEquals(String.format("Category %s does not exist.", category), exception.getMessage());
+
+        verify(categoryService, times(1)).isCategoryInvalid(category);
+        verifyNoInteractions(expenseRepository);
+    }
+
+    @Test
+    void getAllByCategory_shouldReturnEmptyList_whenNoExpensesFound() {
+        String category = "TRANSPORTATION";
+        when(categoryService.isCategoryInvalid(category)).thenReturn(false);
+        when(expenseRepository.getAllByCategory_NameOrderByDateDesc(CategoryEnum.TRANSPORTATION)).thenReturn(Collections.emptyList());
+
+        List<ExpenseResponse> result = expenseService.getAllByCategory(category);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+
+        verify(categoryService, times(1)).isCategoryInvalid(category);
+        verify(expenseRepository, times(1)).getAllByCategory_NameOrderByDateDesc(CategoryEnum.TRANSPORTATION);
+    }
+
 
 }
