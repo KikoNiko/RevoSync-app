@@ -7,6 +7,7 @@ import com.kbc.kibi_coins.model.Expense;
 import com.kbc.kibi_coins.model.dto.ExpenseRequest;
 import com.kbc.kibi_coins.model.dto.ExpenseResponse;
 import com.kbc.kibi_coins.service.ExpenseService;
+import com.kbc.kibi_coins.util.ConstantMessages;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,22 +15,27 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(value = ExpenseController.class)
 @WithMockUser
 public class ExpenseControllerTests {
+    @MockBean
+    SecurityFilterChain securityFilterChain;
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -55,7 +61,7 @@ public class ExpenseControllerTests {
 
         expenseRequest = ExpenseRequest.builder()
                 .amount(testExpense.getAmount())
-                .category(testExpense.getCategory().toString())
+                .category(testCategory.toString())
                 .date(testExpense.getDate())
                 .comment(testExpense.getComment())
                 .build();
@@ -63,7 +69,7 @@ public class ExpenseControllerTests {
         expenseResponse = ExpenseResponse.builder()
                 .id(testExpense.getId())
                 .amount(testExpense.getAmount())
-                .category(testExpense.getCategory().toString())
+                .category(testCategory.toString())
                 .date(testExpense.getDate())
                 .comment(testExpense.getComment())
                 .build();
@@ -90,7 +96,6 @@ public class ExpenseControllerTests {
                 .andReturn();
     }
 
-
     @Test
     void getAllExpenses() throws Exception {
         when(expenseService.getAllExpenses()).thenReturn(List.of(expenseResponse));
@@ -100,4 +105,30 @@ public class ExpenseControllerTests {
                 .andReturn();
     }
 
+    @Test
+    void updateExpense_ShouldReturnUpdatedExpense() throws Exception {
+        Long expenseId = 1L;
+        ExpenseRequest request = new ExpenseRequest(BigDecimal.valueOf(200.00), expenseRequest.getCategory(), LocalDate.now(), "Updated comment");
+        ExpenseResponse response = new ExpenseResponse(expenseId, BigDecimal.valueOf(200.00), expenseRequest.getCategory(), LocalDate.now(), "Updated comment");
+
+        when(expenseService.updateExpenseByFields(eq(expenseId), any(ExpenseRequest.class))).thenReturn(response);
+
+        mockMvc.perform(patch("/api/expenses/{id}", expenseId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(expenseId))
+                .andExpect(jsonPath("$.comment").value("Updated comment"))
+                .andExpect(jsonPath("$.amount").value(200.00));
+    }
+
+    @Test
+    void deleteExpense_ShouldReturnOk() throws Exception {
+        Long expenseId = 1L;
+        doNothing().when(expenseService).deleteExpenseById(expenseId);
+
+        mockMvc.perform(delete("/api/expenses/{id}", expenseId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.format(ConstantMessages.EXPENSE_DELETED, expenseId)));
+    }
 }

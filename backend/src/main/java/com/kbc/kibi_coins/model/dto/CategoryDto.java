@@ -9,4 +9,10 @@ public class CategoryDto {
     private Long id;
     private String name;
 
+    public CategoryDto() {
+    }
+
+    public CategoryDto(String name) {
+        this.name = name;
+    }
 }

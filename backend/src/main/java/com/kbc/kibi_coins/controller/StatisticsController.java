@@ -27,7 +27,7 @@ public class StatisticsController {
         return statisticsService.spentByYear(year);
     }
 
-    @GetMapping("/cat")
+    @GetMapping("/spent-by-category")
     public BigDecimal getSpentByCategory(@RequestParam(value = "name") String category) {
         return statisticsService.spentByCategory(category);
     }
