@@ -1,13 +1,14 @@
-INSERT INTO categories (category_id, name, parent_category_id) VALUES
-(1, 'RENT', null),
-(2, 'UTILITIES', null),
-(3, 'FOOD', null),
-(4, 'TRANSPORTATION', null),
-(5, 'EDUCATION', null),
-(6, 'CLOTHING', null),
-(7, 'HEALTHCARE', null),
-(8, 'HOUSEHOLD_SUPPLIES', null),
-(9, 'ENTERTAINMENT', null),
-(10, 'SPORTS', null),
-(11, 'GIFTS', null),
-(12, 'OTHERS', null);
+INSERT INTO categories (category_id, name) VALUES
+(1, 'RENT'),
+(2, 'UTILITIES'),
+(3, 'FOOD'),
+(4, 'TRANSPORTATION'),
+(5, 'EDUCATION'),
+(6, 'CLOTHING'),
+(7, 'HEALTHCARE'),
+(8, 'HOUSEHOLD_SUPPLIES'),
+(9, 'ENTERTAINMENT'),
+(10, 'SPORTS'),
+(11, 'GIFTS'),
+(12, 'TRAVEL'),
+(13, 'OTHERS');

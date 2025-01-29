@@ -29,7 +29,6 @@ function createChart(elementId, data, type) {
         return;
     }
 
-    // Destroy any existing chart on the same element to prevent overlap
     if (chartElement.chartInstance) {
         chartElement.chartInstance.destroy();
     }
@@ -54,7 +53,6 @@ function createChart(elementId, data, type) {
         },
     });
 
-    // Store the instance to destroy it later if needed
     chartElement.chartInstance = chartInstance;
 }
 
