@@ -1,2 +1,2 @@
 # RevoSync
-This is a project application that helps Revolut users with personal expense tracking.
+## This is a project application for Revolut users to track expenses all in one place.
