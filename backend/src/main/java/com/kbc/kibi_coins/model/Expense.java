@@ -30,4 +30,7 @@ public class Expense {
     private LocalDate date;
     private String comment;
 
+    public Expense(BigDecimal amount) {
+        this.amount = amount;
+    }
 }
